@@ -5,9 +5,25 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NetworkService.Views"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800">
+      d:DesignHeight="1024" d:DesignWidth="1340">
 
     <Grid>
-        <TextBlock Text="GraphView" FontSize="50" HorizontalAlignment="Center"/>
+        <StackPanel
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top" Margin="0,80,0,0">
+            <Label
+                Content="Choose an Entity:"
+                FontSize="24" Margin="0,12,41,12"
+                />
+            <TextBox
+                Width="220"
+                Height="48"
+                Margin="0,12,24,12"/>
+            <Button
+                Content="Show"
+                Width="166"
+                Height="48"/>
+        </StackPanel>
     </Grid>
 </UserControl>
