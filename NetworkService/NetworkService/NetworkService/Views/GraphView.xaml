@@ -16,10 +16,24 @@
                 Content="Choose an Entity:"
                 FontSize="24" Margin="0,12,41,12"
                 />
-            <TextBox
-                Width="220"
-                Height="48"
-                Margin="0,12,24,12"/>
+            <ComboBox
+                x:Name="EntityComboBox"
+                Foreground="Black"
+                FontSize="24"
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="10"
+                Background="#BBBBBB"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                ItemsSource="{Binding _Entities}"
+                SelectedItem="{Binding SelectedEntity}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Id}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <Button
                 Content="Show"
                 Width="166"

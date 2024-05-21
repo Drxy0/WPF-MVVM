@@ -1,6 +1,10 @@
-﻿using NetworkService.Helpers;
+﻿using MVVMLight.Messaging;
+using NetworkService.Helpers;
+using NetworkService.Model;
+using Notification.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -20,27 +24,35 @@ namespace NetworkService.ViewModel
 
         public MyICommand<string> NavCommand { get; private set; }
         public MyICommand<Window> CloseWindowCommand { get; private set; }
+		public static ObservableCollection<Entity> Entities { get; set; } = new ObservableCollection<Entity>();
         public EntitiesViewModel entitiesViewModel;
         public DisplayViewModel displayViewModel;
         public GraphViewModel graphViewModel;
-        
         private BindableBase currentViewModel;
+		private NotificationManager notificationManager;
 
-
-        public MainWindowViewModel()
+		public MainWindowViewModel()
         {
             createListener(); //Povezivanje sa serverskom aplikacijom
 
+			notificationManager = new NotificationManager();
+
 			NavCommand = new MyICommand<string>(OnNav);
+			CloseWindowCommand = new MyICommand<Window>(CloseWindow);
+
+			Entities = new ObservableCollection<Entity>();
 
 			entitiesViewModel = new EntitiesViewModel();
             displayViewModel = new DisplayViewModel();
             graphViewModel = new GraphViewModel();
-
             CurrentViewModel = entitiesViewModel;
+
+			Messenger.Default.Register<Entity>(this, AddToList);
+			Messenger.Default.Register<NotificationContent>(this, ShowToastNotification);
+
 		}
 
-        private void createListener()
+		private void createListener()
         {
             var tcp = new TcpListener(IPAddress.Any, 25675);
             tcp.Start();
@@ -111,6 +123,19 @@ namespace NetworkService.ViewModel
 					CurrentViewModel = graphViewModel;
 					break;
 			}
+		}
+		private void ShowToastNotification(NotificationContent notificationContent)
+		{
+			notificationManager.Show(notificationContent, "WindowNotificationArea");
+		}
+
+		private void AddToList(Entity entity)
+		{
+			Entities.Insert(0, entity);
+		}
+		private void CloseWindow(Window MainWindow)
+		{
+			MainWindow.Close();
 		}
 	}
 }

@@ -4,9 +4,12 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NetworkService.Views"
+      xmlns:viewModel="clr-namespace:NetworkService.ViewModel"
       mc:Ignorable="d" 
       d:DesignHeight="1024" d:DesignWidth="1340">
-
+    <UserControl.DataContext>
+        <viewModel:EntitiesViewModel/>
+    </UserControl.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="930"/>
@@ -17,12 +20,24 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Text="EntitiesView" Grid.ColumnSpan="2" FontSize="30" HorizontalAlignment="Center" Margin="0,0,0,100"/>
-        <DataGrid 
+        
+        <DataGrid
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
             Grid.Row="1" 
             Width="900" 
             Height="830" 
             HorizontalAlignment="Right" 
-            VerticalAlignment="Top">
+            VerticalAlignment="Top"
+            ItemsSource="{Binding _Entities}"
+            SelectedItem="{Binding SelectedEntity}"
+            >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" />
+                <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+            </DataGrid.Columns>
         </DataGrid>
 
         <Rectangle Width="370" Height="480"
@@ -42,24 +57,47 @@
 
         <StackPanel Width="304" Orientation="Horizontal"  VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" Margin="46,68,60,0">
             <TextBlock Text="ID:" FontSize="26" VerticalAlignment="Center"/>
-            <TextBox FontSize="24" Width="200" Height="32" Margin="70,0,0,0"/>
+            <TextBox
+                x:Name="IdTextBox"
+                Text="{Binding IdText}"
+                FontSize="24"
+                Width="200" Height="32"
+                Margin="70,0,0,0"/>
         </StackPanel>
 
         <StackPanel Width="304" Orientation="Horizontal"  VerticalAlignment="Top" Grid.Column="2" Grid.Row="1" Margin="46,127,60,0">
             <TextBlock Text="Name:" FontSize="26" VerticalAlignment="Center"/>
-            <TextBox FontSize="24" Width="200" Height="32" Margin="26,0,0,0"/>
+            <TextBox 
+                x:Name="NameTextBox"
+                Text="{Binding NameText}"
+                FontSize="24" 
+                Width="200" Height="32" 
+                Margin="26,0,0,0"/>
         </StackPanel>
 
         <StackPanel Orientation="Vertical"  Grid.Column="2" Grid.Row="1" Margin="46,190,60,100">
             <TextBlock Text="Type:" FontSize="26" VerticalAlignment="Center"/>
-            <RadioButton GroupName="Type" Content="  RTD" FontSize="26" VerticalContentAlignment="Center" Margin="40,26,0,0"/>
-            <RadioButton GroupName="Type" Content="  TermoSprega" FontSize="26" VerticalContentAlignment="Center" Margin="40,10,0,0"/>
-            <Button Content="Add"
+            <RadioButton 
+                GroupName="Type" 
+                Content="  RTD"
+                IsChecked="{Binding RtdChecked, Mode=TwoWay}"
+                FontSize="26" 
+                VerticalContentAlignment="Center" 
+                Margin="40,26,0,0"/>
+            <RadioButton 
+                GroupName="Type" 
+                Content="  TermoSprega" 
+                FontSize="26" 
+                VerticalContentAlignment="Center" 
+                Margin="40,10,0,0"/>
+            <Button
+                Content="Add"
                 Grid.Column="1"
                 Grid.Row="1"
-                Height="48" Width="166" Margin="0,70,0,0"
-                
-                />
+                Height="48" Width="166"
+                Margin="0,70,0,0"
+                Command="{Binding AddEntityCommand}"
+                Cursor="Hand"/>
         </StackPanel>
 
 
