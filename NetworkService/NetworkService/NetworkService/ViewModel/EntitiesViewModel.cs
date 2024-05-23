@@ -22,10 +22,45 @@ namespace NetworkService.ViewModel
 	{
 		private string _idText;
 		private string _nameText;
+		private bool _isNameChecked;
+		private bool _isTypeChecked;
 		private bool _rtdChecked;
 		private bool _termoChecked;
+		private string _searchTextBox;
 		private ObservableCollection<Entity> _entities;
-		private string _selectedEntity;
+		private ObservableCollection<Entity> filter = new ObservableCollection<Entity>();
+		private Entity currentEntity;
+
+		public string SearchTextBox
+		{
+			get { return _searchTextBox; }
+			set { _searchTextBox = value; OnPropertyChanged(nameof(SearchTextBox)); }
+		}
+		public bool IsNameChecked
+		{
+			get { return _isNameChecked; }
+			set
+			{
+				if (_isNameChecked != value)
+				{
+					_isNameChecked = value;
+					OnPropertyChanged(nameof(IsNameChecked));
+				}
+			}
+		}
+		public bool IsTypeChecked
+		{
+			get { return _isTypeChecked; }
+			set
+			{
+				if (_isTypeChecked != value)
+				{
+					_isTypeChecked = value;
+					OnPropertyChanged(nameof(IsTypeChecked));
+				}
+			}
+		}
+
 		public bool RtdChecked
 		{
 			get { return _rtdChecked; }
@@ -51,22 +86,29 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
-		public string IdText { get { return _idText; } set { _idText = value; OnPropertyChanged(nameof(IdText)); } }
-		public string NameText { get { return _nameText; } set { _nameText = value; OnPropertyChanged(nameof(NameText)); } }
-		public string SelectedEntity { get { return _selectedEntity; } set { _selectedEntity = value; OnPropertyChanged(nameof(SelectedEntity)); } }
+
+		public string IdText
+		{
+			get { return _idText; }
+			set { _idText = value; OnPropertyChanged(nameof(IdText)); }
+		}
+
+		public string NameText
+		{
+			get { return _nameText; }
+			set { _nameText = value; OnPropertyChanged(nameof(NameText)); }
+		}
 
 		public MyICommand AddEntityCommand { get; set; }
-		private Entity currentEntity = new Entity();
+		public MyICommand DeleteEntityCommand { get; set; }
+		public MyICommand SearchEntitiesCommand { get; set; }
+		public MyICommand ClearSearchCommand { get; set; }
 		public MyICommand ShowEntityCommand { get; set; }
+
 		public ObservableCollection<Entity> _Entities
 		{
 			get { return _entities; }
 			set { _entities = value; OnPropertyChanged(nameof(_Entities)); }
-		}
-		public EntitiesViewModel()
-		{
-			AddEntityCommand = new MyICommand(OnAdd);
-			_Entities = MainWindowViewModel.Entities;
 		}
 
 		public Entity CurrentEntity
@@ -75,8 +117,19 @@ namespace NetworkService.ViewModel
 			set
 			{
 				currentEntity = value;
-				OnPropertyChanged("CurrentEntity");
+				OnPropertyChanged(nameof(CurrentEntity));
 			}
+		}
+
+		public EntitiesViewModel()
+		{
+			AddEntityCommand = new MyICommand(OnAdd);
+			DeleteEntityCommand = new MyICommand(OnDelete);
+			SearchEntitiesCommand = new MyICommand(OnSearch);
+			ClearSearchCommand = new MyICommand(OnClear);
+			_Entities = MainWindowViewModel.Entities;
+			RtdChecked = true;
+			IsNameChecked = true;
 		}
 
 		public void OnAdd()
@@ -89,6 +142,58 @@ namespace NetworkService.ViewModel
 			{
 				MainWindowViewModel.Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.TermoSprega));
 			}
+			IdText = string.Empty;
+			NameText = string.Empty;
+			RtdChecked = true;
+			TermoChecked = false;
 		}
+
+		public void OnDelete()
+		{
+			var itemsToDelete = _Entities.Where(e => e.IsSelected).ToList();
+			foreach (var item in itemsToDelete)
+			{
+				MainWindowViewModel.Entities.Remove(item);
+				try { filter.Remove(item); } catch { }
+			}
+			if (SearchTextBox.Equals(string.Empty))
+			{
+				_Entities = MainWindowViewModel.Entities;
+			}
+			else
+			{
+				_Entities = filter;
+			}
+		}
+		public void OnSearch()
+		{
+			filter = new ObservableCollection<Entity>();
+			if (IsNameChecked)
+			{
+				foreach (Entity e in MainWindowViewModel.Entities)
+				{
+					if (e.Name.Contains(SearchTextBox))
+						filter.Add(e);
+				}
+			}
+			else
+			{
+				foreach (Entity e in MainWindowViewModel.Entities)
+				{
+					if (e.Type.ToString().Contains(SearchTextBox))
+						filter.Add(e);
+				}
+			}
+			_Entities = filter;
+		}
+
+		public void OnClear()
+		{
+			SearchTextBox = string.Empty;
+			filter.Clear();
+			_Entities = MainWindowViewModel.Entities;
+		}
+
 	}
 }
+

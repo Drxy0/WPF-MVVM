@@ -18,6 +18,9 @@ namespace NetworkService.Model
 		private string name;
 		private Type type;
 		private double _value;
+		private bool _isSelected;
+
+
 
 		public int Id
 		{
@@ -74,6 +77,18 @@ namespace NetworkService.Model
 				{
 					_value = value;
 					OnPropertyChanged("Value");
+				}
+			}
+		}
+		public bool IsSelected
+		{
+			get { return _isSelected; }
+			set
+			{
+				if (_isSelected != value)
+				{
+					_isSelected = value;
+					OnPropertyChanged(nameof(IsSelected));
 				}
 			}
 		}
