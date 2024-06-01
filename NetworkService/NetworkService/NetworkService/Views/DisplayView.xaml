@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NetworkService.Views"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="1024" d:DesignWidth="1340">
 
@@ -12,7 +13,631 @@
             <ColumnDefinition Width="220"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TreeView>
+        <TreeView x:Name="TreeView" 
+              Background="#A09D9D" 
+              FontWeight="Bold" 
+              FontSize="24">
+
+            <TreeViewItem Header="RTD"  ItemsSource="{Binding RTD_Entities}">
+                <TreeViewItem.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontSize="18"/>
+                    </DataTemplate>
+                </TreeViewItem.ItemTemplate>
+            </TreeViewItem>
+
+            <TreeViewItem Header="TermoSprega" ItemsSource="{Binding TermoSprega_Entities}">
+                <TreeViewItem.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" FontSize="18"/>
+                    </DataTemplate>
+                </TreeViewItem.ItemTemplate>
+            </TreeViewItem>
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction 
+                        Command="{Binding SelectionChanged_TreeView}"
+                        CommandParameter="{Binding SelectedItem, ElementName=TreeView}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseLeftButtonUp">
+                    <i:InvokeCommandAction 
+                        Command="{Binding MouseLeftButtonUp_TreeView}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
         </TreeView>
+
+        <Grid
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" 
+                    Grid.Column="0" 
+                    BorderBrush="Black" 
+                    BorderThickness="1" 
+                    Width="100" 
+                    Height="100" 
+                    Margin="0 0 0 10">
+                <ContentControl Width="100" 
+                        Content="{Binding Path=CanvasCollection[0]}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                                Command="{Binding DropEntityOnCanvas}"
+                                CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                                Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                                CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                                Command="{Binding RightMouseButtonDownOnCanvas}" 
+                                CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+                Grid.Row="0" 
+                Grid.Column="0"
+                Content="X"
+                Height="15" 
+                Width="15" 
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom" 
+                Margin="0 0 26 11" 
+                Command="{Binding FreeUpCanvas}"
+                CommandParameter="0"/>
+
+            <Border Grid.Row="0" 
+                    Grid.Column="1" 
+                    BorderBrush="Black" 
+                    BorderThickness="1" 
+                    Width="100" 
+                    Height="100" 
+                    Margin="0 0 0 10">
+                <ContentControl Width="100" 
+                    Content="{Binding Path=CanvasCollection[1]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                                Command="{Binding DropEntityOnCanvas}" 
+                                CommandParameter="1"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                                Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                                CommandParameter="1"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                                Command="{Binding RightMouseButtonDownOnCanvas}" 
+                                CommandParameter="1"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+                Grid.Row="0" 
+                Grid.Column="1"
+                Content="X"
+                Height="15" 
+                Width="15" 
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom" 
+                Margin="0 0 26 11" 
+                Command="{Binding FreeUpCanvas}"
+                CommandParameter="1"/>
+
+            <Border Grid.Row="0" 
+            Grid.Column="2" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[2]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="2"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="2"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                                Command="{Binding RightMouseButtonDownOnCanvas}" 
+                                CommandParameter="2"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+                Grid.Row="0" 
+                Grid.Column="2"
+                Content="X"
+                Height="15" 
+                Width="15" 
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom" 
+                Margin="0 0 26 11" 
+                Command="{Binding FreeUpCanvas}"
+                CommandParameter="0"/>
+
+            <Border Grid.Row="0" 
+                Grid.Column="3" 
+                BorderBrush="Black" 
+                BorderThickness="1" 
+                Width="100" 
+                Height="100" 
+                Margin="0 0 0 10">
+                <ContentControl Width="100" 
+                                Content="{Binding Path=CanvasCollection[3]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="3"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="3"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="3"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+        Grid.Row="0" 
+        Grid.Column="3"
+        Content="X"
+        Height="15" 
+        Width="15" 
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom" 
+        Margin="0 0 26 11" 
+        Command="{Binding FreeUpCanvas}"
+        CommandParameter="0"/>
+
+            <Border Grid.Row="1" 
+            Grid.Column="0" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[4]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="4"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="4"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="4"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+        Grid.Row="1" 
+        Grid.Column="0"
+        Content="X"
+        Height="15" 
+        Width="15" 
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom" 
+        Margin="0 0 26 11" 
+        Command="{Binding FreeUpCanvas}"
+        CommandParameter="0"/>
+
+            <Border Grid.Row="1" 
+            Grid.Column="1" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[5]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="5"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="5"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="5"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+                Grid.Row="1" 
+                Grid.Column="1"
+                Content="X"
+                Height="15" 
+                Width="15" 
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom" 
+                Margin="0 0 26 11" 
+                Command="{Binding FreeUpCanvas}"
+                CommandParameter="0"/>
+
+            <Border Grid.Row="1" 
+            Grid.Column="2" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[6]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+        Grid.Row="1" 
+        Grid.Column="2"
+        Content="X"
+        Height="15" 
+        Width="15" 
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom" 
+        Margin="0 0 26 11" 
+        Command="{Binding FreeUpCanvas}"
+        CommandParameter="0"/>
+
+            <Border Grid.Row="1" 
+            Grid.Column="3" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[7]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+        Grid.Row="1" 
+        Grid.Column="3"
+        Content="X"
+        Height="15" 
+        Width="15" 
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom" 
+        Margin="0 0 26 11" 
+        Command="{Binding FreeUpCanvas}"
+        CommandParameter="0"/>
+
+            <Border Grid.Row="2" 
+            Grid.Column="0" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[8]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+        Grid.Row="2" 
+        Grid.Column="0"
+        Content="X"
+        Height="15" 
+        Width="15" 
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom" 
+        Margin="0 0 26 11" 
+        Command="{Binding FreeUpCanvas}"
+        CommandParameter="0"/>
+
+            <Border Grid.Row="2" 
+            Grid.Column="1" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[9]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+        Grid.Row="2" 
+        Grid.Column="1"
+        Content="X"
+        Height="15" 
+        Width="15" 
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom" 
+        Margin="0 0 26 11" 
+        Command="{Binding FreeUpCanvas}"
+        CommandParameter="0"/>
+
+            <Border Grid.Row="2" 
+            Grid.Column="2" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[10]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+        Grid.Row="2" 
+        Grid.Column="2"
+        Content="X"
+        Height="15" 
+        Width="15" 
+        HorizontalAlignment="Right"
+        VerticalAlignment="Bottom" 
+        Margin="0 0 26 11" 
+        Command="{Binding FreeUpCanvas}"
+        CommandParameter="0"/>
+
+            <Border Grid.Row="2" 
+            Grid.Column="3" 
+            BorderBrush="Black" 
+            BorderThickness="1" 
+            Width="100" 
+            Height="100" 
+            Margin="0 0 0 10">
+                <ContentControl Width="100" 
+            Content="{Binding Path=CanvasCollection[11]}">
+                    <i:Interaction.Triggers>
+
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction 
+                        Command="{Binding DropEntityOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding LeftMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding MouseLeftButtonUp}"/>
+                        </i:EventTrigger>
+
+                        <i:EventTrigger EventName="MouseRightButtonDown">
+                            <i:InvokeCommandAction 
+                        Command="{Binding RightMouseButtonDownOnCanvas}" 
+                        CommandParameter="0"/>
+                        </i:EventTrigger>
+
+                    </i:Interaction.Triggers>
+                </ContentControl>
+            </Border>
+            <Button
+                Grid.Row="2" 
+                Grid.Column="3"
+                Content="X"
+                Height="15" 
+                Width="15" 
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom" 
+                Margin="0 0 26 11" 
+                Command="{Binding FreeUpCanvas}"
+                CommandParameter="0"/>
+
+
+        </Grid>
     </Grid>
 </UserControl>

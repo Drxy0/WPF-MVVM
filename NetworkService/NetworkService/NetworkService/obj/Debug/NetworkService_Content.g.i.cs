@@ -8,13 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/arrow-undo.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/database.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/database_white.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/desktop.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/desktop_white.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/graph.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/graph_white.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/terminal.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/rtd.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/termosprega.png")]
 
 

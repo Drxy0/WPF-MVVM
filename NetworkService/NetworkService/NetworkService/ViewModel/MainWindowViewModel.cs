@@ -25,6 +25,8 @@ namespace NetworkService.ViewModel
         public MyICommand<string> NavCommand { get; private set; }
         public MyICommand<Window> CloseWindowCommand { get; private set; }
 		public static ObservableCollection<Entity> Entities { get; set; } = new ObservableCollection<Entity>();
+		public static ObservableCollection<Entity> RTD_Entities { get; set; } = new ObservableCollection<Entity>();
+		public static ObservableCollection<Entity> TermoSprega_Entities { get; set; } = new ObservableCollection<Entity>();
         public EntitiesViewModel entitiesViewModel;
         public DisplayViewModel displayViewModel;
         public GraphViewModel graphViewModel;

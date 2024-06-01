@@ -47,3 +47,41 @@ C:\Users\drljo\Desktop\PSI IUIS - PZ2 - NetworkService i Metering Simulator\Netw
 C:\Users\drljo\Desktop\PSI IUIS - PZ2 - NetworkService i Metering Simulator\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.csproj.CopyComplete
 C:\Users\drljo\Desktop\PSI IUIS - PZ2 - NetworkService i Metering Simulator\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.exe
 C:\Users\drljo\Desktop\PSI IUIS - PZ2 - NetworkService i Metering Simulator\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.pdb
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\NetworkService.exe.config
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\NetworkService.exe
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\NetworkService.pdb
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\Microsoft.Expression.Interactions.dll
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\Microsoft.Xaml.Behaviors.dll
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\MVVMLight.Messaging.dll
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\Notification.Wpf.dll
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\System.ValueTuple.dll
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\Microsoft.Expression.Interactions.xml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\Microsoft.Xaml.Behaviors.pdb
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\Microsoft.Xaml.Behaviors.xml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\MVVMLight.Messaging.xml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\Notification.Wpf.pdb
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\Notification.Wpf.xml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\System.ValueTuple.xml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\bin\Debug\System.Windows.Interactivity.xml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.csproj.AssemblyReference.cache
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\MainWindow.g.cs
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\Views\DisplayView.g.cs
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\Views\EntitiesView.g.cs
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\Views\GraphView.g.cs
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\App.g.cs
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService_MarkupCompile.cache
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService_MarkupCompile.lref
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\App.baml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\MainWindow.baml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\Views\DisplayView.baml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\Views\EntitiesView.baml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\Views\GraphView.baml
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.g.resources
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.Properties.Resources.resources
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.csproj.GenerateResource.cache
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.csproj.CoreCompileInputs.cache
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkS.954836E0.Up2Date
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.exe
+C:\Users\drljo\Desktop\WPF-MVVM-master\NetworkService\NetworkService\NetworkService\obj\Debug\NetworkService.pdb

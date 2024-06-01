@@ -137,10 +137,12 @@ namespace NetworkService.ViewModel
 			if (RtdChecked)
 			{
 				MainWindowViewModel.Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.RTD));
+				MainWindowViewModel.RTD_Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.RTD));
 			}
 			else
 			{
 				MainWindowViewModel.Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.TermoSprega));
+				MainWindowViewModel.TermoSprega_Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.TermoSprega));
 			}
 			IdText = string.Empty;
 			NameText = string.Empty;
