@@ -3,12 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:NetworkService"
+        xmlns:terminal="clr-namespace:NetworkService.Helpers"
         xmlns:viewModel ="clr-namespace:NetworkService.ViewModel"
         xmlns:views ="clr-namespace:NetworkService.Views"
         mc:Ignorable="d"
         ResizeMode="CanMinimize"
-        Title="MainWindow" Height="1024" Width="1440">
+        Title="MainWindow" Height="800" Width="1420">
     <Window.DataContext>
         <viewModel:MainWindowViewModel/>
     </Window.DataContext>
@@ -24,7 +26,21 @@
             <views:GraphView />
         </DataTemplate>
     </Window.Resources>
-    
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding ShiftBacktickCommand}"
+                    Key="Oem3"
+                    Modifiers="Shift" />
+        <KeyBinding Command="{Binding Shift1_Command}"
+                    Key="D1"
+                    Modifiers="Shift" />
+        <KeyBinding Command="{Binding Shift2_Command}"
+                    Key="D2"
+                    Modifiers="Shift" />
+        <KeyBinding Command="{Binding Shift3_Command}"
+                    Key="D3"
+                    Modifiers="Shift" />
+    </Window.InputBindings>
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -33,7 +49,7 @@
         </Grid.ColumnDefinitions>
 
         <!--#region SideBar-->
-        <Rectangle Width="100" Height="1024" Grid.RowSpan="5" HorizontalAlignment="Left" Fill="Gray"/>
+        <Rectangle Width="100" Height="800" Grid.RowSpan="5" HorizontalAlignment="Left" Fill="Gray"/>
 
 
         <Button
@@ -91,6 +107,7 @@
             VerticalAlignment="Bottom"
             Margin="0,0,0,20"
             Cursor="Hand"
+            Command="{Binding TerminalCommand}"
             Style="{StaticResource SidebarButtonStyle}">
             <Button.Background>
                 <ImageBrush ImageSource="Assets/terminal.png" Stretch="Uniform"/>
@@ -100,6 +117,55 @@
         <ContentControl
                 Grid.Column="1"
                 Content="{Binding CurrentViewModel}" />
+
+        <!-- Terminal Display Area -->
+        <TextBox x:Name="TerminalDisplayTextBox"
+                 VerticalScrollBarVisibility="Auto"
+                 Height="200"
+                 VerticalAlignment="Bottom"
+                 Margin="0 0 0 30"
+                 Grid.Column="1"
+                 TextWrapping="Wrap"
+                 IsReadOnly="True"
+                 Background="Black"
+                 Foreground="Green"
+                 FontFamily="Consolas"
+                 FontSize="14"
+                 Visibility="{Binding TerminalDisplayVisible}"
+                 Text="{Binding TerminalDisplay, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <!-- Terminal Input Area -->
+        <TextBox x:Name="TerminalInputTextBox"
+                 Background="Black"
+                 Foreground="Green"
+                 Grid.Column="1"
+                 FontFamily="Consolas"
+                 FontSize="14"
+                 VerticalAlignment="Bottom"
+                 Height="30"
+                 Visibility="{Binding TerminalInputVisible}"
+                 Text="{Binding TerminalInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="140,0,0,0">
+            <i:Interaction.Behaviors>
+                <terminal:KeyPressBehavior Command="{Binding KeyPressedCommand}" />
+            </i:Interaction.Behaviors>
+        </TextBox>
+
+        <Label x:Name="TerminalLabel"
+               Grid.Column="1"
+               Content="{Binding TerminalLabel}"
+               FontSize="14"
+               FontFamily="Consolas"
+               Height="30"
+               Width="140"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="Black"
+               Foreground="White"
+               Visibility="{Binding TerminalLabelVisible}"
+               />
+
+
     </Grid>
 
 </Window>

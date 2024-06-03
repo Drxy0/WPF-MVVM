@@ -7,20 +7,14 @@ using System.Threading.Tasks;
 
 namespace NetworkService.Model
 {
-	public enum Type
-	{
-		RTD,
-		TermoSprega
-	}
 	public class Entity : BindableBase
 	{
 		private int id;
 		private string name;
-		private Type type;
+		private EntityType type;
 		private double _value;
 		private bool _isSelected;
-
-
+		List<Pair<DateTime, double>> _last_5_values;
 
 		public int Id
 		{
@@ -46,7 +40,8 @@ namespace NetworkService.Model
 				}
 			}
 		}
-		public Type Type
+
+		public EntityType Type
 		{
 			get { return type; }
 			set
@@ -58,18 +53,16 @@ namespace NetworkService.Model
 				}
 			}
 		}
+
 		public double Value
 		{
 			get
 			{
-				if (_value < 250 || _value > 350)
+				/*if (_value < 250 || _value > 350)
 				{
-					return 0; //???
-				}
-				else
-				{
-					return _value;
-				}
+					return 0;
+				}*/
+				return _value;
 			}
 			set
 			{
@@ -92,12 +85,34 @@ namespace NetworkService.Model
 				}
 			}
 		}
-		public Entity() { }
+
+		public List<Pair<DateTime, double>> Last_5_Values
+		{
+			get
+			{
+				return _last_5_values;
+			}
+			set
+			{
+				if (_last_5_values != value)
+				{
+					_last_5_values = value;
+					OnPropertyChanged(nameof(Last_5_Values));
+				}
+			}
+		}
+
+		public Entity()
+		{
+			Last_5_Values = new List<Pair<DateTime, double>>();
+		}
 		public Entity(int id, string name, Type type)
 		{
 			Id = id;
 			Name = name;
-			Type = type;
+			Type = new EntityType(type);
+			Last_5_Values = new List<Pair<DateTime, double>>();
+
 		}
 		public override string ToString()
 		{

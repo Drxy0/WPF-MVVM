@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/rtd.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/termosprega.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/display_old.png")]
 
 

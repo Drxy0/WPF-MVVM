@@ -14,3 +14,19 @@ D:\!FTN\!HCI VEZBE\2023-24\PZ2\Visual Studio\MeteringSimulator\MeteringSimulator
 D:\!FTN\!HCI VEZBE\2023-24\PZ2\Visual Studio\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.csproj.CoreCompileInputs.cache
 D:\!FTN\!HCI VEZBE\2023-24\PZ2\Visual Studio\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.exe
 D:\!FTN\!HCI VEZBE\2023-24\PZ2\Visual Studio\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.pdb
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\bin\Debug\MeteringSimulator.exe.config
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\bin\Debug\MeteringSimulator.exe
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\bin\Debug\MeteringSimulator.pdb
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.csproj.AssemblyReference.cache
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MainWindow.g.cs
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\App.g.cs
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator_MarkupCompile.cache
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator_MarkupCompile.lref
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\App.baml
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MainWindow.baml
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.g.resources
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.Properties.Resources.resources
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.csproj.GenerateResource.cache
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.csproj.CoreCompileInputs.cache
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.exe
+C:\Users\drljo\Desktop\WPF-MVVM\MeteringSimulator\MeteringSimulator\obj\Debug\MeteringSimulator.pdb

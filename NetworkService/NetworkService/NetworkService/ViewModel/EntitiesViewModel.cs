@@ -130,20 +130,55 @@ namespace NetworkService.ViewModel
 			_Entities = MainWindowViewModel.Entities;
 			RtdChecked = true;
 			IsNameChecked = true;
+			SearchTextBox = string.Empty;
 		}
 
 		public void OnAdd()
 		{
-			if (RtdChecked)
+			if (!int.TryParse(_idText, out _))
 			{
-				MainWindowViewModel.Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.RTD));
-				MainWindowViewModel.RTD_Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.RTD));
+				//Show Toast Notification for id not int;
+				IdText = string.Empty;
+				return;
+			}
+
+			if (MainWindowViewModel.Entities.Any(e => e.Id == int.Parse(_idText)))
+			{
+				//Show Toast Notification for same id;
+				IdText = string.Empty;
+				return;
+			}
+
+			Entity entity = new Entity
+			{
+				Id = int.Parse(_idText),
+				Name = _nameText,
+			};
+
+			if (RtdChecked) 
+			{
+				entity.Type = new EntityType(Model.Type.RTD);
 			}
 			else
 			{
-				MainWindowViewModel.Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.TermoSprega));
-				MainWindowViewModel.TermoSprega_Entities.Add(new Entity(int.Parse(_idText), _nameText, Model.Type.TermoSprega));
+				entity.Type = new EntityType(Model.Type.TermoSprega);
 			}
+
+			MainWindowViewModel.Entities.Add(entity);
+			
+			if (RtdChecked)
+			{
+				MainWindowViewModel.RTD_Entities.Add(entity);
+			}
+			else
+			{
+				MainWindowViewModel.TermoSprega_Entities.Add(entity);
+			}
+			ResetFields();
+		}
+
+		private void ResetFields()
+		{
 			IdText = string.Empty;
 			NameText = string.Empty;
 			RtdChecked = true;
