@@ -48,37 +48,37 @@
 
         <Canvas
             Grid.Row="1"
-            Margin="50">
+                Margin="200,50,100,50">
             <Line X1="0" Y1="0"
-                  X2="0" Y2="600"
+                  X2="0" Y2="450"
                   StrokeThickness="3"
                   Stroke="Black"/>
-            <Line X1="0" Y1="600"
-                  X2="1000" Y2="600"
+            <Line X1="0" Y1="450"
+                  X2="900" Y2="450"
                   StrokeThickness="3"
                   Stroke="Black" />
             <Line X1="150" Y1="0"
-                  X2="150" Y2="600"
+                  X2="150" Y2="450"
                   StrokeThickness="3"
                   Stroke="Black"/>
             <Line X1="300" Y1="0"
-                  X2="300" Y2="600"
+                  X2="300" Y2="450"
                   StrokeThickness="3"
                   Stroke="Black"/>
             <Line X1="450" Y1="0"
-                  X2="450" Y2="600"
+                  X2="450" Y2="450"
                   StrokeThickness="3"
                   Stroke="Black"/>
             <Line X1="600" Y1="0"
-                  X2="600" Y2="600"
+                  X2="600" Y2="450"
                   StrokeThickness="3"
                   Stroke="Black"/>
             <Line X1="750" Y1="0"
-                  X2="750" Y2="600"
+                  X2="750" Y2="450"
                   StrokeThickness="3"
                   Stroke="Black"/>
             <Line X1="900" Y1="0"
-                  X2="900" Y2="600"
+                  X2="900" Y2="450"
                   StrokeThickness="3"
                   Stroke="Black"/>
 
@@ -107,42 +107,42 @@
             <Ellipse 
                 x:Name="Ellipse_1"
                 Margin="{Binding MarginPoint_1}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 Fill="{Binding NodeColor_1}"/>
 
             <Ellipse 
                 x:Name="Ellipse_2"
                 Margin="{Binding MarginPoint_2}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 Fill="{Binding NodeColor_2}"/>
 
             <Ellipse 
                 x:Name="Ellipse_3"
                 Margin="{Binding MarginPoint_3}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 Fill="{Binding NodeColor_3}"/>
             <Ellipse 
                 x:Name="Ellipse_4"
                 Margin="{Binding MarginPoint_4}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 Fill="{Binding NodeColor_4}"/>
             <Ellipse 
                 x:Name="Ellipse_5"
                 Margin="{Binding MarginPoint_5}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 Fill="{Binding NodeColor_5}"/>
 
             <!--Text blocks that write out the current values-->
             <TextBlock
                 Text="{Binding NodeText_1}"
                 Margin="{Binding MarginPoint_1}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 TextAlignment="Center"
@@ -153,8 +153,8 @@
             <TextBlock
                 Text="{Binding NodeText_2}"
                 Margin="{Binding MarginPoint_2}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 TextAlignment="Center"
@@ -165,8 +165,8 @@
             <TextBlock
                 Text="{Binding NodeText_3}"
                 Margin="{Binding MarginPoint_3}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 TextAlignment="Center"
@@ -177,8 +177,8 @@
             <TextBlock
                 Text="{Binding NodeText_4}"
                 Margin="{Binding MarginPoint_4}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 TextAlignment="Center"
@@ -189,8 +189,8 @@
             <TextBlock
                 Text="{Binding NodeText_5}"
                 Margin="{Binding MarginPoint_5}"
-                Width="30"
-                Height="30"
+                Width="40"
+                Height="40"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 TextAlignment="Center"
@@ -199,25 +199,25 @@
                 Background="Transparent" />
 
             <TextBlock Text="{Binding Time_1}"
-                       Margin="30 230"
                        Width="40"
-                       FontSize="12"/>
+                       FontSize="14"
+                       Margin="130,460,0,0" />
             <TextBlock Text="{Binding Time_2}"
-                       Margin="80 230"
+                       Margin="280,460,0,0"
                        Width="40"
-                       FontSize="12"/>
+                       FontSize="14"/>
             <TextBlock Text="{Binding Time_3}"
-                       Margin="130 230"
+                       Margin="430,460,0,0"
                        Width="40"
-                       FontSize="12" />
+                       FontSize="14" />
             <TextBlock Text="{Binding Time_4}"
-                       Margin="180 230"
+                       Margin="580,460,0,0"
                        Width="40"
-                       FontSize="12"/>
+                       FontSize="14"/>
             <TextBlock Text="{Binding Time_5}"
-                       Margin="230 230"
+                       Margin="730,460,0,0"
                        Width="40"
-                       FontSize="12"/>
+                       FontSize="14"/>
 
         </Canvas>
         

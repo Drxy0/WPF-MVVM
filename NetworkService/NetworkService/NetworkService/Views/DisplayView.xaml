@@ -65,21 +65,33 @@
             </Grid.RowDefinitions>
 
             <ItemsControl x:Name="LinesItemsControl"
+                          Grid.Row="0"
+                          Grid.Column="0"
                           Grid.RowSpan="3"
                           Grid.ColumnSpan="4"
-                          Panel.ZIndex="200"
-                          ItemsSource="{Binding LinesToDisplay}">
+                          Panel.ZIndex="-1"
+                          ItemsSource="{Binding LineCollection}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Line X1="{Binding X1}"
+                              Y1="{Binding Y1}"
+                              X2="{Binding X2}"
+                              Y2="{Binding Y2}"
+                              Stroke="Blue"
+                              StrokeThickness="4" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
             </ItemsControl>
-            
+
 
             <Border Grid.Row="0"
                     Grid.Column="0"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[0]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -149,7 +161,7 @@
 
             <Border Grid.Row="0"
                     Grid.Column="1"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[1]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -219,7 +231,7 @@
 
             <Border Grid.Row="0"
                     Grid.Column="2"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[2]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -289,7 +301,7 @@
 
             <Border Grid.Row="0"
                     Grid.Column="3"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[3]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -359,7 +371,7 @@
 
             <Border Grid.Row="1"
                     Grid.Column="0"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[4]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -430,7 +442,7 @@
 
             <Border Grid.Row="1"
                     Grid.Column="1"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[5]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -501,7 +513,7 @@
 
             <Border Grid.Row="1"
                     Grid.Column="2"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[6]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -572,7 +584,7 @@
 
             <Border Grid.Row="1"
                     Grid.Column="3"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[7]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -643,7 +655,7 @@
 
             <Border Grid.Row="2"
                     Grid.Column="0"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[8]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -714,7 +726,7 @@
 
             <Border Grid.Row="2"
                     Grid.Column="1"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[9]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150">
@@ -785,7 +797,7 @@
 
             <Border Grid.Row="2"
                     Grid.Column="2"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[10]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150"
@@ -857,7 +869,7 @@
 
             <Border Grid.Row="2"
                     Grid.Column="3"
-                    BorderBrush="Black"
+                    BorderBrush="{Binding BorderBrushCollection[11]}"
                     BorderThickness="1"
                     Width="150"
                     Height="150"

@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NetworkService.Model;
+using System.IO;
 
 namespace NetworkService.ViewModel
 {
@@ -28,6 +30,7 @@ namespace NetworkService.ViewModel
 		private string terminalInputVisible;
 		private string terminalLabelVisible;
 		private static bool terminalVisible = false;
+		private bool idFound = false;
 
 		public string TerminalDisplayVisible
 		{
@@ -195,6 +198,8 @@ namespace NetworkService.ViewModel
 
 				if (e.Key == Key.Enter)
 				{
+					TerminalDisplay += '\n' + TerminalInput;
+
 					if (TerminalLabel == "Entity input: ")
 					{
 						HandleAddEntity();
@@ -215,8 +220,6 @@ namespace NetworkService.ViewModel
 					{
 						HandleSearchEntity();
 					}
-
-					TerminalDisplay += '\n' + TerminalInput;
 					TerminalInput = string.Empty;
 				}
 			}
@@ -287,6 +290,7 @@ namespace NetworkService.ViewModel
 		private void HandleDeleteEntity()
 		{
 			string[] parameters = TerminalInput.Split(' ');
+			idFound = false;
 			foreach (string id in parameters.Skip(1))
 			{
 				if (!int.TryParse(id, out int result))   //if id is not int
@@ -299,11 +303,19 @@ namespace NetworkService.ViewModel
 					foreach (var item in entitiesViewModel._Entities.Where(e => e.Id == result).ToList())
 					{
 						item.IsSelected = true;
+						idFound = true;
 					}
 
-					entitiesViewModel.OnDelete();
-					TerminalDisplay += '\n' + $"Entity with id {result} deleted successfully";
-					TerminalInput = string.Empty;
+					if (idFound)
+					{
+						entitiesViewModel.OnDelete();
+						TerminalDisplay += '\n' + $"Entity with id {result} deleted successfully.";
+						TerminalInput = string.Empty;
+					}
+					else
+					{
+						TerminalDisplay += '\n' + $"Error: Entity with id {result} not found.";
+					}
 				}
 			}
 		}
@@ -375,9 +387,9 @@ namespace NetworkService.ViewModel
 							if (Entities.Count > 0)
 							{
 								var splited = incomming.Split(':');
-								//DateTime dt = DateTime.Now;
-								//using (StreamWriter sw = File.AppendText("Log.txt"))
-								//sw.WriteLine(dt + "; " + splited[0] + ", " + splited[1]);
+								DateTime dt = DateTime.Now;
+								using (StreamWriter sw = File.AppendText("Log.txt"))
+								sw.WriteLine(dt + "; " + splited[0] + ", " + splited[1]);
 
 								int id = Int32.Parse(splited[0].Split('_')[1]);
 
@@ -436,13 +448,33 @@ namespace NetworkService.ViewModel
 			notificationManager.Show(notificationContent, "WindowNotificationArea");
 		}
 
-		private void AddToList(Entity entity)
-		{
-			Entities.Insert(0, entity);
-		}
 		private void CloseWindow(Window MainWindow)
 		{
 			MainWindow.Close();
+		}
+
+		public void UpdateCanvasValue(int id)
+		{
+			foreach (var tmp in DisplayViewModel.CanvasIDCollection)
+			{
+				int canvasId = entitiesViewModel.GetCanvasIndexForEntityId(id);
+				if (tmp.Equals(canvasId.ToString()))
+				{
+					try
+					{
+						DisplayViewModel.CanvasValueCollection[canvasId] = entitiesViewModel._Entities[id].Value.ToString();
+						/*if (NetworkEntityViewModel.NetowrkEntities[id].LastValue > 0.34 && NetworkEntityViewModel.NetowrkEntities[id].LastValue < 2.73)
+						{
+
+						}
+						else
+						{
+
+						}*/
+					}
+					catch (Exception ex) { }
+				}
+			}
 		}
 	}
 }

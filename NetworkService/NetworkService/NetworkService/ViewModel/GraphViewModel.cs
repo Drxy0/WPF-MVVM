@@ -29,6 +29,9 @@ namespace NetworkService.ViewModel
 
 		#region Properties
 		private readonly double graphCoefficient = 0.16;
+		public MyICommand SelectCommand;
+		public MyICommand SelectionChangedCommand { get; }
+
 		private readonly Timer _timer;
 
 		private Point startPoint;
@@ -96,14 +99,25 @@ namespace NetworkService.ViewModel
 		public GraphViewModel()
 		{
 			Entities = MainWindowViewModel.Entities;
+			if (Entities.Count != 0)
+			{
+				SelectedEntity = Entities[0];
+			}
 
-			StartPoint = new Point(45, 210);
+			StartPoint = new Point(130, 215);
 
-			MarginPoint_1 = new Thickness(30, 195, 0, 0);
-			MarginPoint_2 = new Thickness(80, 195, 0, 0);
-			MarginPoint_3 = new Thickness(130, 195, 0, 0);
-			MarginPoint_4 = new Thickness(180, 195, 0, 0);
-			MarginPoint_5 = new Thickness(230, 195, 0, 0);
+			LinePoint_1 = new Point(130, 215);
+			LinePoint_2 = new Point(280, 215);
+			LinePoint_3 = new Point(430, 215);
+			LinePoint_4 = new Point(580, 215);
+			LinePoint_5 = new Point(730, 215);
+
+
+			MarginPoint_1 = new Thickness(130, 195, 0, 0);
+			MarginPoint_2 = new Thickness(280, 195, 0, 0);
+			MarginPoint_3 = new Thickness(430, 195, 0, 0);
+			MarginPoint_4 = new Thickness(580, 195, 0, 0);
+			MarginPoint_5 = new Thickness(730, 195, 0, 0);
 
 			NodeColor_1 = new SolidColorBrush(Colors.Teal);
 			NodeColor_2 = new SolidColorBrush(Colors.Teal);
@@ -134,20 +148,14 @@ namespace NetworkService.ViewModel
 
 				Application.Current.Dispatcher.Invoke(() =>
 				{
-
-
 					if (SelectedEntity.Last_5_Values.Count > 0)
 					{
-						LinePoint_1 = new Point(LinePoint_1.X, (int)Math.Round(210 - SelectedEntity.Last_5_Values[0].Item2 * graphCoefficient));
+						LinePoint_1 = new Point(LinePoint_1.X, (int)Math.Round(215 - SelectedEntity.Last_5_Values[0].Item2 * graphCoefficient));
 						StartPoint = LinePoint_1;
 						MarginPoint_1 = new Thickness(MarginPoint_1.Left, (int)Math.Round(195 - SelectedEntity.Last_5_Values[0].Item2 * graphCoefficient), 0, 0);
 						NodeText_1 = SelectedEntity.Last_5_Values[0].Item2.ToString();
 
-						if (SelectedEntity.Last_5_Values[0].Item2 < 670)
-						{
-							NodeColor_1 = new SolidColorBrush(Colors.Purple);
-						}
-						else if (SelectedEntity.Last_5_Values[0].Item2 > 735)
+						if (SelectedEntity.Last_5_Values[0].Item2 < 250 || SelectedEntity.Last_5_Values[0].Item2 > 350)
 						{
 							NodeColor_1 = new SolidColorBrush(Colors.Red);
 						}
@@ -160,8 +168,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_1 = new Point(45, 210);
-						MarginPoint_1 = new Thickness(30, 195, 0, 0);
+						LinePoint_1 = new Point(135, 215);
+						MarginPoint_1 = new Thickness(135, 195, 0, 0);
 						NodeColor_1 = new SolidColorBrush(Colors.Teal);
 						NodeText_1 = "-";
 						Time_1 = "00:00";
@@ -170,15 +178,11 @@ namespace NetworkService.ViewModel
 
 					if (SelectedEntity.Last_5_Values.Count > 1)
 					{
-						LinePoint_2 = new Point(LinePoint_2.X, (int)Math.Round(210 - SelectedEntity.Last_5_Values[1].Item2 * graphCoefficient));
+						LinePoint_2 = new Point(LinePoint_2.X, (int)Math.Round(215 - SelectedEntity.Last_5_Values[1].Item2 * graphCoefficient));
 						MarginPoint_2 = new Thickness(MarginPoint_2.Left, (int)Math.Round(195 - SelectedEntity.Last_5_Values[1].Item2 * graphCoefficient), 0, 0);
 						NodeText_2 = SelectedEntity.Last_5_Values[1].Item2.ToString();
 
-						if (SelectedEntity.Last_5_Values[1].Item2 < 670)
-						{
-							NodeColor_2 = new SolidColorBrush(Colors.Purple);
-						}
-						else if (SelectedEntity.Last_5_Values[1].Item2 > 735)
+						if (SelectedEntity.Last_5_Values[1].Item2 < 250 || SelectedEntity.Last_5_Values[1].Item2 > 350)
 						{
 							NodeColor_2 = new SolidColorBrush(Colors.Red);
 						}
@@ -191,8 +195,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_2 = new Point(95, 210);
-						MarginPoint_2 = new Thickness(80, 195, 0, 0);
+						LinePoint_2 = new Point(285, 215);
+						MarginPoint_2 = new Thickness(285, 195, 0, 0);
 						NodeColor_2 = new SolidColorBrush(Colors.Teal);
 						NodeText_2 = "-";
 						Time_2 = "00:00";
@@ -200,15 +204,11 @@ namespace NetworkService.ViewModel
 
 					if (SelectedEntity.Last_5_Values.Count > 2)
 					{
-						LinePoint_3 = new Point(LinePoint_3.X, (int)Math.Round(210 - SelectedEntity.Last_5_Values[2].Item2 * graphCoefficient));
+						LinePoint_3 = new Point(LinePoint_3.X, (int)Math.Round(215 - SelectedEntity.Last_5_Values[2].Item2 * graphCoefficient));
 						MarginPoint_3 = new Thickness(MarginPoint_3.Left, (int)Math.Round(195 - SelectedEntity.Last_5_Values[2].Item2 * graphCoefficient), 0, 0);
 						NodeText_3 = SelectedEntity.Last_5_Values[2].Item2.ToString();
 
-						if (SelectedEntity.Last_5_Values[2].Item2 < 670)
-						{
-							NodeColor_3 = new SolidColorBrush(Colors.Purple);
-						}
-						else if (SelectedEntity.Last_5_Values[2].Item2 > 735)
+						if (SelectedEntity.Last_5_Values[2].Item2 < 250 || SelectedEntity.Last_5_Values[2].Item2 > 350)
 						{
 							NodeColor_3 = new SolidColorBrush(Colors.Red);
 						}
@@ -221,8 +221,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_3 = new Point(145, 210);
-						MarginPoint_3 = new Thickness(130, 195, 0, 0);
+						LinePoint_3 = new Point(435, 215);
+						MarginPoint_3 = new Thickness(435, 195, 0, 0);
 						NodeColor_3 = new SolidColorBrush(Colors.Teal);
 						NodeText_3 = "-";
 						Time_3 = "00:00";
@@ -230,15 +230,11 @@ namespace NetworkService.ViewModel
 
 					if (SelectedEntity.Last_5_Values.Count > 3)
 					{
-						LinePoint_4 = new Point(LinePoint_4.X, (int)Math.Round(210 - SelectedEntity.Last_5_Values[3].Item2 * graphCoefficient));
+						LinePoint_4 = new Point(LinePoint_4.X, (int)Math.Round(215 - SelectedEntity.Last_5_Values[3].Item2 * graphCoefficient));
 						MarginPoint_4 = new Thickness(MarginPoint_4.Left, (int)Math.Round(195 - SelectedEntity.Last_5_Values[3].Item2 * graphCoefficient), 0, 0);
 						NodeText_4 = SelectedEntity.Last_5_Values[3].Item2.ToString();
 
-						if (SelectedEntity.Last_5_Values[3].Item2 < 670)
-						{
-							NodeColor_4 = new SolidColorBrush(Colors.Purple);
-						}
-						else if (SelectedEntity.Last_5_Values[3].Item2 > 735)
+						if (SelectedEntity.Last_5_Values[3].Item2 < 250 || SelectedEntity.Last_5_Values[3].Item2 > 350)
 						{
 							NodeColor_4 = new SolidColorBrush(Colors.Red);
 						}
@@ -251,8 +247,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_4 = new Point(195, 210);
-						MarginPoint_4 = new Thickness(180, 195, 0, 0);
+						LinePoint_4 = new Point(585, 215);
+						MarginPoint_4 = new Thickness(585, 195, 0, 0);
 						NodeColor_4 = new SolidColorBrush(Colors.Teal);
 						NodeText_4 = "-";
 						Time_4 = "00:00";
@@ -260,15 +256,11 @@ namespace NetworkService.ViewModel
 
 					if (SelectedEntity.Last_5_Values.Count > 4)
 					{
-						LinePoint_5 = new Point(LinePoint_5.X, (int)Math.Round(210 - SelectedEntity.Last_5_Values[4].Item2 * graphCoefficient));
+						LinePoint_5 = new Point(LinePoint_5.X, (int)Math.Round(215 - SelectedEntity.Last_5_Values[4].Item2 * graphCoefficient));
 						MarginPoint_5 = new Thickness(MarginPoint_5.Left, (int)Math.Round(195 - SelectedEntity.Last_5_Values[4].Item2 * graphCoefficient), 0, 0);
 						NodeText_5 = SelectedEntity.Last_5_Values[4].Item2.ToString();
 
-						if (SelectedEntity.Last_5_Values[4].Item2 < 670)
-						{
-							NodeColor_5 = new SolidColorBrush(Colors.Purple);
-						}
-						else if (SelectedEntity.Last_5_Values[4].Item2 > 735)
+						if (SelectedEntity.Last_5_Values[4].Item2 < 250 || SelectedEntity.Last_5_Values[4].Item2 > 350)
 						{
 							NodeColor_5 = new SolidColorBrush(Colors.Red);
 						}
@@ -281,8 +273,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_5 = new Point(245, 210);
-						MarginPoint_5 = new Thickness(230, 195, 0, 0);
+						LinePoint_5 = new Point(735, 215);
+						MarginPoint_5 = new Thickness(735, 195, 0, 0);
 						NodeColor_5 = new SolidColorBrush(Colors.Teal);
 						NodeText_5 = "-";
 						Time_5 = "00:00";

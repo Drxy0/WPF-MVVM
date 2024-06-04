@@ -187,6 +187,16 @@ namespace NetworkService.ViewModel
 
 		public void OnDelete()
 		{
+			MessageBoxResult result = MessageBox.Show(
+				"Are you sure you want to delete the selected items?",
+				"Confirm Deletion",
+				MessageBoxButton.YesNo,
+				MessageBoxImage.Warning
+			);
+
+			if (result == MessageBoxResult.No)
+				return;
+
 			var itemsToDelete = _Entities.Where(e => e.IsSelected).ToList();
 			foreach (var item in itemsToDelete)
 			{
@@ -201,6 +211,7 @@ namespace NetworkService.ViewModel
 			{
 				_Entities = filter;
 			}
+			//TODO TOAST
 		}
 		public void OnSearch()
 		{
@@ -229,6 +240,20 @@ namespace NetworkService.ViewModel
 			SearchTextBox = string.Empty;
 			filter.Clear();
 			_Entities = MainWindowViewModel.Entities;
+		}
+
+		public int GetCanvasIndexForEntityId(int entityId)
+		{
+			for (int i = 0; i < DisplayViewModel.CanvasCollection.Count; i++)
+			{
+				Entity entity = (DisplayViewModel.CanvasCollection[i].Resources["data"]) as Entity;
+
+				if ((entity != null) && (entity.Id == entityId))
+				{
+					return i;
+				}
+			}
+			return -1;
 		}
 
 	}

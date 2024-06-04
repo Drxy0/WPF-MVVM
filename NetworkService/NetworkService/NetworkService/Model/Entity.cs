@@ -69,7 +69,7 @@ namespace NetworkService.Model
 				if (_value != value)
 				{
 					_value = value;
-					OnPropertyChanged("Value");
+					OnPropertyChanged(nameof(Value));
 				}
 			}
 		}
