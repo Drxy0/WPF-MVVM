@@ -15,6 +15,7 @@ namespace NetworkService.ViewModel
 	public class GraphViewModel : BindableBase
 	{
 		public ObservableCollection<Entity> Entities { get; set; }
+		private string selectedItemId;
 
 		private Entity selectedEntity;
 		public Entity SelectedEntity
@@ -27,8 +28,18 @@ namespace NetworkService.ViewModel
 			}
 		}
 
+		public string SelectedItemId
+		{
+			get => selectedItemId;
+			set
+			{
+				selectedItemId = value;
+				OnPropertyChanged(nameof(SelectedItemId));
+			}
+		}
+
+		private readonly double graphCoefficient = 0.2;
 		#region Properties
-		private readonly double graphCoefficient = 0.16;
 		public MyICommand SelectCommand;
 		public MyICommand SelectionChangedCommand { get; }
 
@@ -168,8 +179,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_1 = new Point(135, 215);
-						MarginPoint_1 = new Thickness(135, 195, 0, 0);
+						LinePoint_1 = new Point(130, 215);
+						MarginPoint_1 = new Thickness(130, 195, 0, 0);
 						NodeColor_1 = new SolidColorBrush(Colors.Teal);
 						NodeText_1 = "-";
 						Time_1 = "00:00";
@@ -195,8 +206,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_2 = new Point(285, 215);
-						MarginPoint_2 = new Thickness(285, 195, 0, 0);
+						LinePoint_2 = new Point(280, 215);
+						MarginPoint_2 = new Thickness(280, 195, 0, 0);
 						NodeColor_2 = new SolidColorBrush(Colors.Teal);
 						NodeText_2 = "-";
 						Time_2 = "00:00";
@@ -221,8 +232,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_3 = new Point(435, 215);
-						MarginPoint_3 = new Thickness(435, 195, 0, 0);
+						LinePoint_3 = new Point(430, 215);
+						MarginPoint_3 = new Thickness(430, 195, 0, 0);
 						NodeColor_3 = new SolidColorBrush(Colors.Teal);
 						NodeText_3 = "-";
 						Time_3 = "00:00";
@@ -247,8 +258,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_4 = new Point(585, 215);
-						MarginPoint_4 = new Thickness(585, 195, 0, 0);
+						LinePoint_4 = new Point(580, 215);
+						MarginPoint_4 = new Thickness(580, 195, 0, 0);
 						NodeColor_4 = new SolidColorBrush(Colors.Teal);
 						NodeText_4 = "-";
 						Time_4 = "00:00";
@@ -273,8 +284,8 @@ namespace NetworkService.ViewModel
 					}
 					else
 					{
-						LinePoint_5 = new Point(735, 215);
-						MarginPoint_5 = new Thickness(735, 195, 0, 0);
+						LinePoint_5 = new Point(730, 215);
+						MarginPoint_5 = new Thickness(730, 195, 0, 0);
 						NodeColor_5 = new SolidColorBrush(Colors.Teal);
 						NodeText_5 = "-";
 						Time_5 = "00:00";

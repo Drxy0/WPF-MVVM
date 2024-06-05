@@ -18,8 +18,6 @@ namespace NetworkService.ViewModel
 {
 	public class DisplayViewModel : BindableBase
 	{
-		private static int first_index = 0;
-		
 		private Entity draggedItem = null;
 		private bool dragging = false;
 		public int draggingSourceIndex = -1;
@@ -33,15 +31,16 @@ namespace NetworkService.ViewModel
 		private static ObservableCollection<string> canvasIDCollection = new ObservableCollection<string> { "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"};
 		private static ObservableCollection<string> canvasValueCollection = new ObservableCollection<string> { "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X" };
 		private static ObservableCollection<string> borderBrushCollection= new ObservableCollection<string> { "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black"};
+
 		public static ObservableCollection<Line> LineCollection { get; set; }
+		public static ObservableCollection<Canvas> CanvasCollection { get; set; }
 		public static ObservableCollection<string> CanvasIDCollection { get { return canvasIDCollection; } set { canvasIDCollection = value; } }
 		public static ObservableCollection<string> CanvasValueCollection { get { return canvasValueCollection; } set { canvasValueCollection = value; } }
 		public static ObservableCollection<string> BorderBrushCollection { get { return borderBrushCollection; } set { borderBrushCollection = value; } }
 		public static ObservableCollection<Entity> RTD_Entities { get; set; } = MainWindowViewModel.RTD_Entities;
 		public static ObservableCollection<Entity> TermoSprega_Entities { get; set; } = MainWindowViewModel.TermoSprega_Entities;
-		public static ObservableCollection<Entity> entities { get; set; } = MainWindowViewModel.Entities;
-		public static ObservableCollection<Canvas> CanvasCollection { get; set; }
 
+		#region Commands
 		public MyICommand<object> SelectionChanged_TreeView { get; set; }
 		public MyICommand MouseLeftButtonUp_TreeView { get; set; }
 		public MyICommand<object> DropEntityOnCanvas { get; set; }
@@ -49,6 +48,7 @@ namespace NetworkService.ViewModel
 		public MyICommand MouseLeftButtonUpCanvas { get; set; }
 		public MyICommand<object> RightMouseButtonUpOnCanvas { get; set; }
 		public MyICommand<object> FreeUpCanvas { get; set; }
+		#endregion
 		public Entity SelectedEntity { get { return selectedEntity; } set { selectedEntity = value; OnPropertyChanged("SelectedEntity"); } }
 		
 		private Line currentLine = new Line();
@@ -67,10 +67,10 @@ namespace NetworkService.ViewModel
 			RightMouseButtonUpOnCanvas = new MyICommand<object>(OnMouseRightButtonUp);
 			LeftMouseButtonDownOnCanvas = new MyICommand<object>(OnLeftMouseButtonDown);
 			FreeUpCanvas = new MyICommand<object>(OnFreeUpCanvas);
-
 		}
 
-		private void OnMouseRightButtonUp(object entity)
+
+		public void OnMouseRightButtonUp(object entity)
 		{
 			int index = Convert.ToInt32(entity);
 
@@ -125,6 +125,12 @@ namespace NetworkService.ViewModel
 						linePoint1 = new Point();
 						linePoint2 = new Point();
 						currentLine = new Line();
+
+						ToastNotify.RaiseToast(
+							"Connect Error",
+							$"Entites {sourceCanvasIndex} and {destinationCanvasIndex} are already connected",
+							Notification.Wpf.NotificationType.Error);
+
 					}
 				}
 			}
@@ -158,30 +164,72 @@ namespace NetworkService.ViewModel
 		{
 			double x = 0, y = 0;
 
-			for (int row = 0; row <= 4; row++)
+			for (int row = 0; row < 3; row++)
 			{
-				for (int col = 0; col <= 3; col++)
+				for (int col = 0; col < 4; col++)
 				{
 					int currentIndex = row * 4 + col;
 
 					if (canvasIndex == currentIndex)
 					{
-						x = 130 + (col * 277);
-						y = 120 + (row * 268);
+						switch(row)
+						{
+							case 0:
+								y = 135;
+								break;
+							case 1:
+								y = 385;
+								break;
+							case 2:
+								y = 640;
+								break;
+						}
+
+						switch(col)
+						{
+							case 0:
+								x = 130;
+								break;
+							case 1:
+								x = 410;
+								break;
+							case 2:
+								x = 675;
+								break;
+							case 3:
+								x = 950;
+								break;
+						}
 						break;
 					}
 				}
 			}
 			return new Point(x, y);
 		}
-		private void OnMouseLeftButtonUp()
+
+		//index 0 X1 - 130, Y1 - 135
+		//index 1 X1 - 410, Y1 - 135
+		//index 2 X1 - 675, Y1 - 135
+		//index 3 X1 - 950, Y1 - 135
+
+		//index 4 X1 - 130, Y1 - 385
+		//index 5 X1 - 675, Y1 - 385
+		//index 6 X1 - 675, Y1 - 385
+		//index 7 X1 - 950, Y1 - 385
+
+		//index 8 X1 - 130, Y1 - 640
+		//index 9 X1 - 675, Y1 - 640
+		//index 10 X1 - 675, Y1 - 640
+		//index 11 X1 - 950, Y1 - 640
+
+		public void OnMouseLeftButtonUp()
 		{
 			draggedItem = null;
 			SelectedEntity = null;
 			dragging = false;
 			draggingSourceIndex = -1;
 		}
-		private void OnSelectionChanged(object selectedItem)
+		public void OnSelectionChanged(object selectedItem)
 		{
 			if (!dragging && selectedItem is Entity selectedEntity)
 			{
@@ -191,7 +239,7 @@ namespace NetworkService.ViewModel
 			}
 		}
 
-		private void OnLeftMouseButtonDown(object entity)
+		public void OnLeftMouseButtonDown(object entity)
 		{
 			if (!dragging)
 			{
@@ -207,18 +255,15 @@ namespace NetworkService.ViewModel
 			}
 		}
 
-		private void OnDrop(object entity)
+		public void OnDrop(object e)
 		{
 			bool rtd = false;
 			if (draggedItem != null)
 			{
-				int index = Convert.ToInt32(entity);
+				int index = Convert.ToInt32(e);
 
 				if (CanvasCollection[index].Resources["taken"] == null)
 				{
-					CanvasIDCollection[index] = draggedItem.Id.ToString();
-					CanvasValueCollection[index] = draggedItem.Value.ToString();
-
 					BitmapImage image = new BitmapImage();
 					image.BeginInit();
 
@@ -234,6 +279,41 @@ namespace NetworkService.ViewModel
 
 					image.EndInit();
 
+
+					// Create and initialize list
+					List<object> list = new List<object>();
+
+					// Create deep copies of the collections
+					ObservableCollection<string> mojCanvasIDCollection = DeepCopyObservableCollection(canvasIDCollection);
+					ObservableCollection<string> mojCanvasValueCollection = DeepCopyObservableCollection(CanvasValueCollection);
+					ObservableCollection<Canvas> mojCanvasCollection = DeepCopyObservableCollection(CanvasCollection);
+					ObservableCollection<Entity> mojEntity = new ObservableCollection<Entity>();
+
+					// Add copies to the list
+					list.Add(mojCanvasIDCollection);
+					list.Add(mojCanvasValueCollection);
+					list.Add(mojCanvasCollection);
+
+					// Add other elements
+					if (rtd && draggingSourceIndex == -1)
+					{
+						list.Add("rtd");
+						mojEntity = DeepCopyObservableCollection(RTD_Entities);
+					}
+					else
+					{
+						list.Add("termosprega");
+						mojEntity = DeepCopyObservableCollection(TermoSprega_Entities);
+					}
+					list.Add(mojEntity);
+					list.Add(index.ToString());
+
+					// Save state
+					MainWindowViewModel.Undo = new SaveState<CommandType, object>(CommandType.CanvasManipulation, list);
+
+					// Modify collections
+					CanvasIDCollection[index] = draggedItem.Id.ToString();
+					CanvasValueCollection[index] = draggedItem.Value.ToString();
 					CanvasCollection[index].Background = new ImageBrush(image);
 					CanvasCollection[index].Resources.Add("taken", true);
 					CanvasCollection[index].Resources.Add("data", draggedItem);
@@ -246,7 +326,7 @@ namespace NetworkService.ViewModel
 						CanvasCollection[draggingSourceIndex].Resources.Remove("data");
 						CanvasIDCollection[draggingSourceIndex] = "X";
 						CanvasValueCollection[draggingSourceIndex] = "X";
-
+						BorderBrushCollection[draggingSourceIndex] = "Black";
 						UpdateLinesForCanvas(draggingSourceIndex, index);
 						if (sourceCanvasIndex != -1)
 						{
@@ -272,6 +352,11 @@ namespace NetworkService.ViewModel
 				}
 			}
 			dragging = false;
+		}
+
+		public static ObservableCollection<T> DeepCopyObservableCollection<T>(ObservableCollection<T> original)
+		{
+			return new ObservableCollection<T>(original.Select(item => item));
 		}
 
 		private void UpdateLinesForCanvas(int sourceCanvas, int destinationCanvas)
@@ -352,7 +437,7 @@ namespace NetworkService.ViewModel
 			}
 			return -1;
 		}
-		private void OnFreeUpCanvas(object parameter)
+		public void OnFreeUpCanvas(object parameter)
 		{
 			int index = Convert.ToInt32(parameter);
 

@@ -15,8 +15,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using NetworkService.Model;
 using System.IO;
+using System.Reflection;
+using NetworkService.Views;
+using System.Windows.Media;
+//using System.Data;
 
 namespace NetworkService.ViewModel
 {
@@ -31,7 +34,42 @@ namespace NetworkService.ViewModel
 		private string terminalLabelVisible;
 		private static bool terminalVisible = false;
 		private bool idFound = false;
+		private int caretIndexTerminal;
 
+		private static int abs_id = -1;
+
+		private string entitiesIcon;
+		private string displayIcon;
+		private string graphIcon;
+		private string terminalIcon;
+
+		private int terminalDisplayHeight;
+
+		private static string help = @"
+	COMMAND LIST
+
+	Add entity into collection:					add (id: int) (name: string) (type: RTD or TermoSprega)
+	Delete entity from collection:				del (id: int) ...
+	Search entities by type or name:				search (option: string) (single word query: string)
+	Put entity into display view canvas:				put (id: int) (canvasIndex: int)
+	Remove entity from display view canvas:			pop (id: int) ...
+	Connect two entites in display view:				connect (canvasIndex: int) (canvasIndex: int)
+	Move an entity from one canvas position to another:	move (sourceCanvasIndex: int) (destinationCanvasIndex: int)
+	Show graph for selected entity:				show (id: int)
+					";
+
+		public int CaretIndexTerminal
+		{
+			get { return caretIndexTerminal; }
+			set
+			{
+				if (caretIndexTerminal != value)
+				{
+					caretIndexTerminal = value;
+					OnPropertyChanged(nameof(CaretIndexTerminal));
+				}
+			}
+		}
 		public string TerminalDisplayVisible
 		{
 			get { return terminalDisplayVisible; }
@@ -44,6 +82,7 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
+
 
 		public string TerminalInputVisible
 		{
@@ -71,23 +110,76 @@ namespace NetworkService.ViewModel
 			}
 		}
 
+		public int TerminalDisplayHeight
+		{
+			get { return terminalDisplayHeight; }
+			set
+			{
+				if (terminalDisplayHeight != value)
+				{
+					terminalDisplayHeight = value;
+					OnPropertyChanged(nameof(TerminalDisplayHeight));
+				}
+			}
+		}
+
 		public MyICommand<string> NavCommand { get; private set; }
         public MyICommand<Window> CloseWindowCommand { get; private set; }
+		public MyICommand UndoCommand { get; set; }
+		public MyICommand PreviousViewCommand { get; set; }
 
 		public static ObservableCollection<Entity> Entities { get; set; } = new ObservableCollection<Entity>();
 		public static ObservableCollection<Entity> RTD_Entities { get; set; } = new ObservableCollection<Entity>();
 		public static ObservableCollection<Entity> TermoSprega_Entities { get; set; } = new ObservableCollection<Entity>();
+		public static Dictionary<int, int> idIndex_Pair { get; set; } = new Dictionary<int, int>();
         public EntitiesViewModel entitiesViewModel;
         public DisplayViewModel displayViewModel;
         public GraphViewModel graphViewModel;
         private BindableBase currentViewModel;
 		private NotificationManager notificationManager;
 
+		private object _selectedContent;
+		public object SelectedContent
+		{
+			get => _selectedContent;
+			set
+			{
+				SetProperty(ref _selectedContent, value);
+				UndoCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		public static SaveState<CommandType, object> Undo { get; set; }
+		public static SaveState<CommandType, object> PreviousView { get; set; }
+		public string EntitiesIcon
+		{
+			get { return entitiesIcon; }
+			set { entitiesIcon = value; OnPropertyChanged(nameof(EntitiesIcon)); }
+		}
+		public string DisplayIcon
+		{
+			get { return displayIcon; }
+			set { displayIcon = value; OnPropertyChanged(nameof(DisplayIcon)); }
+		}
+		public string GraphIcon
+		{
+			get { return graphIcon; }
+			set { graphIcon = value; OnPropertyChanged(nameof(GraphIcon)); }
+		}
+		public string TerminalIcon
+		{
+			get { return terminalIcon; }
+			set { terminalIcon = value; OnPropertyChanged(nameof(TerminalIcon)); }
+		}
+
 		public ICommand KeyPressedCommand { get; }
 		public ICommand ShiftBacktickCommand { get; }
 		public ICommand Shift1_Command { get; }
 		public ICommand Shift2_Command { get; }
 		public ICommand Shift3_Command { get; }
+		public ICommand ShiftUp_Command {  get; }
+		public ICommand ShiftDown_Command {  get; }
+
 		public ICommand TerminalCommand { get; private set; }
 
 		private string terminalInput;
@@ -112,12 +204,15 @@ namespace NetworkService.ViewModel
 		{
 			get { return terminalLabel; }
 			set { terminalLabel = value; OnPropertyChanged(nameof(TerminalLabel)); }
+
 		}
+		public static Mutex Mutex { get; set; } = new Mutex();
 		public MainWindowViewModel()
         {
             createListener(); //Povezivanje sa serverskom aplikacijom
 
 			notificationManager = new NotificationManager();
+			Undo = new SaveState<CommandType, object>();
 
 			NavCommand = new MyICommand<string>(OnNav);
 			TerminalCommand = new RelayCommand(OnTerminalButton);
@@ -127,6 +222,12 @@ namespace NetworkService.ViewModel
 			Shift2_Command = new RelayCommand(OnShift2);
 			Shift3_Command = new RelayCommand(OnShift3);
 
+			ShiftUp_Command = new RelayCommand(OnShiftUp);
+			ShiftDown_Command = new RelayCommand(OnShiftDown);
+			UndoCommand = new MyICommand(OnUndo);
+			PreviousViewCommand = new MyICommand(OnPreviousView);
+			KeyPressedCommand = new RelayCommand(OnKeyPressed);
+
 			Entities = new ObservableCollection<Entity>();
 
 			entitiesViewModel = new EntitiesViewModel();
@@ -134,14 +235,67 @@ namespace NetworkService.ViewModel
             graphViewModel = new GraphViewModel();
             CurrentViewModel = entitiesViewModel;
 
-			KeyPressedCommand = new RelayCommand(OnKeyPressed);
+			PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
+
+			InitialiseFields();
+			ShowHide_Terminal();
+		}
+		private void InitialiseFields()
+		{
 			TerminalInput = string.Empty;
 			TerminalDisplay = string.Empty;
 			TerminalLabel = "Terminal input: ";
+			EntitiesIcon = "Assets/entities_white.png";
+			DisplayIcon = "Assets/display.png";
+			GraphIcon = "Assets/graph.png";
+			TerminalIcon = "Assets/terminal.png";
+			TerminalDisplayHeight = 200;
+		}
+
+		private void OnPreviousView()
+		{
+			SaveState<CommandType, object> saveState = PreviousView;
+			if (saveState.CommandType == CommandType.SwitchViews)
+			{
+				System.Type viewType = saveState.SavedState as System.Type;
+
+				if (viewType == typeof(EntitiesViewModel))
+				{
+					CurrentViewModel = entitiesViewModel;
+					PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
+					NavEntities();
+				}
+				else if (viewType == typeof(DisplayViewModel))
+				{
+					CurrentViewModel = displayViewModel;
+					PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
+					NavDisplay();
+				}
+				else if (viewType == typeof(GraphViewModel))
+				{
+					CurrentViewModel = graphViewModel;
+					PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
+					NavGraph();
+				}
+			}
+		}
+		private void OnShiftUp(object e)
+		{
+			if (TerminalDisplayHeight < 400)
+				TerminalDisplayHeight += 20;
+		}
+		private void OnShiftDown(object e)
+		{
+			if (TerminalDisplayHeight > 0)
+				TerminalDisplayHeight -= 20;
+		}
+		private void OnTerminalButton(object parameter)
+		{
+			terminalVisible = !terminalVisible;
 			ShowHide_Terminal();
 		}
 
-		private void OnTerminalButton(object parameter)
+		private void OnShiftBacktickPressed(object parameter)
 		{
 			terminalVisible = !terminalVisible;
 			ShowHide_Terminal();
@@ -154,12 +308,14 @@ namespace NetworkService.ViewModel
 				TerminalDisplayVisible = "Hidden";
 				TerminalInputVisible = "Hidden";
 				TerminalLabelVisible = "Hidden";
+				TerminalIcon = "Assets/terminal.png";
 			}
 			else
 			{
 				TerminalDisplayVisible = "Visible";
 				TerminalInputVisible = "Visible";
 				TerminalLabelVisible = "Visible";
+				TerminalIcon = "Assets/terminal_white.png";
 			}
 
 		}
@@ -176,13 +332,7 @@ namespace NetworkService.ViewModel
 		{
 			OnNav("graph");
 		}
-
-		private void OnShiftBacktickPressed(object parameter)
-		{
-			terminalVisible = !terminalVisible;
-			ShowHide_Terminal();
-		}
-
+		#region Terminal
 		private void OnKeyPressed(object parameter)
 		{
 			if (parameter is KeyEventArgs e)
@@ -220,22 +370,235 @@ namespace NetworkService.ViewModel
 					{
 						HandleSearchEntity();
 					}
+					else if (TerminalInput.ToLower().StartsWith("put"))
+					{
+						HandlePutEntityOnCanvas();
+					}
+					else if (TerminalInput.ToLower().StartsWith("pop"))
+					{
+						HandlePopEntityFromCanvas();
+					}
+					else if (TerminalInput.ToLower().StartsWith("connect"))
+					{
+						HandleConnectEntitiesOnCanvas();
+					}
+					else if (TerminalInput.ToLower().StartsWith("move"))
+					{
+						HandleMoveEntityOnCanvas();
+					}
+					else if (TerminalInput.ToLower().StartsWith("show"))
+					{
+						HandleShowGraph();
+					}
+					else if (TerminalInput.ToLower() == "-h")
+					{
+						TerminalDisplay += '\n' + help;
+					}
+					else
+					{
+						TerminalDisplay += '\n' + $"Input error: Command not recognised. Type -h for command list.";
+					}
 					TerminalInput = string.Empty;
 				}
 			}
 		}
+		private void HandleShowGraph()
+		{
+			string[] parameters = TerminalInput.Split(' ');
+			if (parameters.Length != 2)
+			{
+				TerminalDisplay += '\n' + "Input error: Invalid parameter nubmer. Correct syntax is: show (id: int)";
+				return;
+			}
+			if (!int.TryParse(parameters[1], out int result))   //if not integer
+			{
+				TerminalDisplay += '\n' + "Input error: Parameter must be an integer. Correct syntax is: show (id: int)";
+				return;
+			}
+			int entityId = int.Parse(parameters[1]);
+			int entityIndexInCollection = -1;
+			bool hasPair = idIndex_Pair.TryGetValue(entityId, out entityIndexInCollection);
+			if (entityIndexInCollection != -1 && hasPair)
+			{
+				graphViewModel.SelectedEntity = Entities[entityIndexInCollection];
+				graphViewModel.SelectedItemId = $"Displaying {entityId}"; 
+			}
+			else
+			{
+				TerminalDisplay += '\n' + $"Input error: Entity with id {entityId} not found.";
+			}
+		}
+		private void HandleMoveEntityOnCanvas()
+		{
+			bool _return = false;
+			string[] parameters = TerminalInput.Split(' ');
 
+			if (parameters.Length != 3)
+			{
+				TerminalDisplay += '\n' + "Input error, correct syntax is: move (canvasIndex: int) (canvasIndex: int)";
+				_return = true;
+			}
+
+			foreach (string integer in parameters.Skip(1))
+			{
+				if (!int.TryParse(integer, out int result))   //if not integer
+				{
+					TerminalDisplay += '\n' + "Input error, correct syntax is: move (canvasIndex: int) (canvasIndex: int)";
+					_return = true;
+				}
+			}
+			int sourceIndex = int.Parse(parameters[1]);
+			int destinationIndex = int.Parse(parameters[2]);
+
+			if (destinationIndex < 0 || destinationIndex > 11)
+			{
+				TerminalDisplay += '\n' + "Error: Incorrect canvas index value. Correct values are 0 to 11";
+				_return = true;
+			}
+
+			if (_return) return;
+
+			displayViewModel.OnLeftMouseButtonDown(sourceIndex);
+			displayViewModel.OnSelectionChanged(sourceIndex);
+			displayViewModel.OnDrop(destinationIndex);
+			displayViewModel.OnMouseLeftButtonUp();
+
+			TerminalInput = string.Empty;
+		}
+		private void HandlePutEntityOnCanvas()
+		{
+			bool _return = false;
+			string[] parameters = TerminalInput.Split(' ');
+
+			if (parameters.Length != 3)
+			{
+				TerminalDisplay += '\n' + "Input error, correct syntax is: put (id: int) (canvasIndex: int)";
+				_return = true;
+			}
+
+			foreach (string integer in parameters.Skip(1))
+			{
+				if (!int.TryParse(integer, out int result))   //if not integer
+				{
+					TerminalDisplay += '\n' + "Input error, correct syntax is: put (id: int) (canvasIndex: int)";
+					_return = true;
+				}
+			}
+			int id = int.Parse(parameters[1]);
+			int canvasIndex = int.Parse(parameters[2]);
+
+			if (entitiesViewModel._Entities.Where(e => e.Id == id).ToList().Count == 0)	//If id not in list
+			{
+				TerminalDisplay += '\n' + "Error: Entity with id {result} not found.";
+				_return = true;
+			}
+			if (canvasIndex < 0 || canvasIndex > 11)
+			{
+				TerminalDisplay += '\n' + "Error: Incorrect canvas index value. Correct values are 0 to 11";
+				_return = true;
+			}
+
+			if (_return) return;
+			int indexOfElement = -1;
+			idIndex_Pair.TryGetValue(id, out indexOfElement);
+
+			displayViewModel.OnSelectionChanged(Entities[indexOfElement]);
+			displayViewModel.OnDrop(canvasIndex);
+
+			TerminalInput = string.Empty;
+		}
+		private void HandlePopEntityFromCanvas()
+		{
+			string[] parameters = TerminalInput.Split(' ');
+			foreach (string id in parameters.Skip(1))
+			{
+				if (!int.TryParse(id, out int result))   //if not integer
+				{
+					TerminalDisplay += '\n' + $"Input error: {id} is not an integer. Correct syntax is: pop (id: int)...";
+				}
+				else
+				{
+					displayViewModel.OnFreeUpCanvas(id);
+					TerminalDisplay += '\n' + $"Success: Canvas {id} sucessfully popped";
+				}
+			}
+		}
+		private void HandleConnectEntitiesOnCanvas()
+		{
+			bool _return = false;
+			string[] parameters = TerminalInput.Split(' ');
+
+			if (parameters.Length != 3)
+			{
+				TerminalDisplay += '\n' + "Input error, correct syntax is: connect (canvasIndex: int) (canvasIndex: int)";
+				_return = true;
+			}
+
+			foreach (string integer in parameters.Skip(1))
+			{
+				if (!int.TryParse(integer, out int result))   //if not integer
+				{
+					TerminalDisplay += '\n' + "Input error, correct syntax is: connect (canvasIndex: int) (canvasIndex: int)";
+					_return = true;
+				}
+			}
+			int sourceIndex = int.Parse(parameters[1]);
+			int destinationIndex = int.Parse(parameters[2]);
+
+			if (destinationIndex < 0 || destinationIndex > 11)
+			{
+				TerminalDisplay += '\n' + "Error: Incorrect canvas index value. Correct values are 0 to 11.";
+				_return = true;
+			}
+
+			if (_return) return;
+			displayViewModel.OnMouseRightButtonUp(sourceIndex);
+			displayViewModel.OnMouseRightButtonUp(destinationIndex);
+			//TerminalDisplay += '\n' + $"Success: Canvases {sourceIndex} and {destinationIndex} connected.";
+		}
 		private void AutoCompleteCommands()
 		{
 			if(IsSubsequence(TerminalInput, "add"))
+			{
 				TerminalInput = "add";
+				CaretIndexTerminal = 3;
+			}
 			else if (IsSubsequence(TerminalInput, "del"))
+			{
 				TerminalInput = "del";
+				CaretIndexTerminal = 3;
+			}
 			else if (IsSubsequence(TerminalInput, "search"))
+			{
 				TerminalInput = "search";
-
+				CaretIndexTerminal = 6;
+			}
+			else if (IsSubsequence(TerminalInput, "put"))
+			{
+				TerminalInput = "put";
+				CaretIndexTerminal = 3;
+			}
+			else if (IsSubsequence(TerminalInput, "pop"))
+			{
+				TerminalInput = "pop";
+				CaretIndexTerminal = 3;
+			}
+			else if (IsSubsequence(TerminalInput, "connect"))
+			{
+				TerminalInput = "connect";
+				CaretIndexTerminal = 7;
+			}
+			else if (IsSubsequence(TerminalInput, "move"))
+			{
+				TerminalInput = "move";
+				CaretIndexTerminal = 4;
+			}
+			else if (IsSubsequence(TerminalInput, "show"))
+			{
+				TerminalInput = "show";
+				CaretIndexTerminal = 4;
+			}
 		}
-
 		private static bool IsSubsequence(string input, string target)
 		{
 			int inputIndex = 0;
@@ -252,8 +615,7 @@ namespace NetworkService.ViewModel
 
 			return inputIndex == input.Length;
 		}
-
-	private void HandleAddEntity()
+		private void HandleAddEntity()
 		{
 			string[] parameters = TerminalInput.Split(' ');
 			if (parameters.Length != 4)
@@ -286,7 +648,6 @@ namespace NetworkService.ViewModel
 				TerminalDisplay += '\n' + "Entity added successfully";
 			}
 		}
-
 		private void HandleDeleteEntity()
 		{
 			string[] parameters = TerminalInput.Split(' ');
@@ -295,7 +656,7 @@ namespace NetworkService.ViewModel
 			{
 				if (!int.TryParse(id, out int result))   //if id is not int
 				{
-					TerminalDisplay += '\n' + "Input error, correct syntax is: del (id: int)";
+					TerminalDisplay += '\n' + "Input error. Correct syntax is: del (id: int)";
 					TerminalInput = string.Empty;
 				}
 				else
@@ -315,11 +676,14 @@ namespace NetworkService.ViewModel
 					else
 					{
 						TerminalDisplay += '\n' + $"Error: Entity with id {result} not found.";
+						ToastNotify.RaiseToast(
+							"Delete Error",
+							$"Entity with id {result} not found.",
+							Notification.Wpf.NotificationType.Error);
 					}
 				}
 			}
 		}
-
 		private void HandleSearchEntity()
 		{
 			string[] parameters = TerminalInput.Split(' ');
@@ -342,7 +706,7 @@ namespace NetworkService.ViewModel
 				TerminalInput = string.Empty;
 			}
 		}
-
+		#endregion
 		private void createListener()
         {
             var tcp = new TcpListener(IPAddress.Any, 25675);
@@ -392,10 +756,15 @@ namespace NetworkService.ViewModel
 								sw.WriteLine(dt + "; " + splited[0] + ", " + splited[1]);
 
 								int id = Int32.Parse(splited[0].Split('_')[1]);
+								abs_id = id;
 
 								Entities[id].Value = Math.Round(Double.Parse(splited[1]), 2);
 								AddValueToList(Entities[id]);
-								//UpdateCanvasValue(id);
+								int id_of_entity = Entities[id].Id;
+								if (!idIndex_Pair.ContainsKey(id_of_entity))
+									idIndex_Pair.Add(id_of_entity, id);
+
+								UpdateCanvasValue(id_of_entity);
 							}
 						}
                     }, null);
@@ -405,8 +774,6 @@ namespace NetworkService.ViewModel
             listeningThread.IsBackground = true;
             listeningThread.Start();
         }
-
-
 		private void AddValueToList(Entity entity)
 		{
 			if (entity.Last_5_Values.Count == 5)
@@ -419,7 +786,6 @@ namespace NetworkService.ViewModel
 				entity.Last_5_Values.Add(new Pair<DateTime, double>(DateTime.Now, entity.Value));
 			}
 		}
-
 		public BindableBase CurrentViewModel
 		{
 			get { return currentViewModel; }
@@ -428,18 +794,109 @@ namespace NetworkService.ViewModel
 				SetProperty(ref currentViewModel, value);
 			}
 		}
+
+		private void OnUndo()
+		{
+			SaveState<CommandType, object> saveState = Undo;
+
+			/*if (saveState.CommandType == CommandType.SwitchViews)		//Vraćanje na prethodni view
+			{
+				System.Type viewType = saveState.SavedState as System.Type;
+
+				if (viewType == typeof(EntitiesViewModel))
+				{
+					CurrentViewModel = entitiesViewModel;
+					Undo = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
+					NavEntities();
+				}
+				else if (viewType == typeof(DisplayViewModel))
+				{
+					CurrentViewModel = displayViewModel;
+					Undo = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
+					NavDisplay();
+				}
+				else if (viewType == typeof(GraphViewModel))
+				{
+					CurrentViewModel = graphViewModel;
+					Undo = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
+					NavGraph();
+				}
+			}*/
+
+			if (saveState.CommandType == CommandType.EntityManipulation)
+			{
+				Entities = saveState.SavedState as ObservableCollection<Entity>;
+				//refreshing the list
+				CurrentViewModel = graphViewModel;
+				CurrentViewModel = entitiesViewModel;
+			}
+			else if (saveState.CommandType == CommandType.CanvasManipulation)
+			{
+				Mutex.WaitOne();
+
+				List<object> state = saveState.SavedState as List<object>;
+				DisplayViewModel.CanvasIDCollection = state[0] as ObservableCollection<string>;
+				DisplayViewModel.CanvasValueCollection = state[1] as ObservableCollection<string>;
+				DisplayViewModel.CanvasCollection = state[2] as ObservableCollection<Canvas>;
+				string rtd = state[3] as string;
+				if (rtd == "rtd")
+				{
+					DisplayViewModel.RTD_Entities =  state[4] as ObservableCollection<Entity>;
+				}
+				else
+				{
+					DisplayViewModel.TermoSprega_Entities = state[4] as ObservableCollection<Entity>;
+				}
+				int index = int.Parse(state[5] as string);
+
+				//DisplayViewModel.CanvasCollection[index].Background = Brushes.LightGray;
+				//DisplayViewModel.CanvasCollection[index].Resources.Remove("taken");
+				//DisplayViewModel.CanvasCollection[index].Resources.Remove("data");
+
+				//refresh view somehow
+
+				Mutex.ReleaseMutex();
+			}
+		}
+		
+		private void NavEntities()
+		{
+			EntitiesIcon = "Assets/entities_white.png";
+			DisplayIcon = "Assets/display.png";
+			GraphIcon = "Assets/graph.png";
+		}
+		private void NavDisplay()
+		{
+			EntitiesIcon = "Assets/entities.png";
+			DisplayIcon = "Assets/display_white.png";
+			GraphIcon = "Assets/graph.png";
+		}
+		private void NavGraph()
+		{
+			EntitiesIcon = "Assets/entities.png";
+			DisplayIcon = "Assets/display.png";
+			GraphIcon = "Assets/graph_white.png";
+		}
+
 		private void OnNav(string destination)
 		{
 			switch (destination)
 			{
 				case "entities":
+
+					PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
 					CurrentViewModel = entitiesViewModel;
+					NavEntities();
 					break;
 				case "display":
+					PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
 					CurrentViewModel = displayViewModel;
+					NavDisplay();
 					break;
 				case "graph":
+					PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
 					CurrentViewModel = graphViewModel;
+					NavGraph();
 					break;
 			}
 		}
@@ -455,26 +912,27 @@ namespace NetworkService.ViewModel
 
 		public void UpdateCanvasValue(int id)
 		{
-			foreach (var tmp in DisplayViewModel.CanvasIDCollection)
+			foreach (string entityIndex in DisplayViewModel.CanvasIDCollection)
 			{
-				int canvasId = entitiesViewModel.GetCanvasIndexForEntityId(id);
-				if (tmp.Equals(canvasId.ToString()))
+				int canvasId_ofEntity = entitiesViewModel.GetCanvasIndexForEntityId(id);
+				if (canvasId_ofEntity == -1) return;
+				string k = DisplayViewModel.CanvasIDCollection[canvasId_ofEntity].ToString();
+				if (entityIndex == k)
 				{
-					try
+					DisplayViewModel.CanvasValueCollection[canvasId_ofEntity] = Entities[abs_id].Value.ToString();
+					double q = Entities[abs_id].Value;
+					if (q > 350 || q < 250)
 					{
-						DisplayViewModel.CanvasValueCollection[canvasId] = entitiesViewModel._Entities[id].Value.ToString();
-						/*if (NetworkEntityViewModel.NetowrkEntities[id].LastValue > 0.34 && NetworkEntityViewModel.NetowrkEntities[id].LastValue < 2.73)
-						{
-
-						}
-						else
-						{
-
-						}*/
+						DisplayViewModel.BorderBrushCollection[canvasId_ofEntity] = "Red";
 					}
-					catch (Exception ex) { }
+					else
+					{
+						DisplayViewModel.BorderBrushCollection[canvasId_ofEntity] = "Black";
+					}
 				}
 			}
 		}
+
 	}
+
 }

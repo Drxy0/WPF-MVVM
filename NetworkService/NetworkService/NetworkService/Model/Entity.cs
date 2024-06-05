@@ -11,10 +11,12 @@ namespace NetworkService.Model
 	{
 		private int id;
 		private string name;
+		private string id_name_treeview;
 		private EntityType type;
 		private double _value;
 		private bool _isSelected;
 		List<Pair<DateTime, double>> _last_5_values;
+
 
 		public int Id
 		{
@@ -37,6 +39,19 @@ namespace NetworkService.Model
 				{
 					name = value;
 					OnPropertyChanged("Name");
+				}
+			}
+		}
+
+		public string Id_name_treeview
+		{
+			get { return id_name_treeview; }
+			set
+			{
+				if (id_name_treeview != value)
+				{
+					id_name_treeview = value;
+					OnPropertyChanged("Id_name_treeview");
 				}
 			}
 		}
@@ -112,6 +127,7 @@ namespace NetworkService.Model
 			Name = name;
 			Type = new EntityType(type);
 			Last_5_Values = new List<Pair<DateTime, double>>();
+			Id_name_treeview = $"{Id.ToString()} - {Name}";
 
 		}
 		public override string ToString()

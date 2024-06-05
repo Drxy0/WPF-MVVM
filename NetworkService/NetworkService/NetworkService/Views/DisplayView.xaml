@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NetworkService.Views"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:fa5="http://schemas.fontawesome.com/icons/"
              mc:Ignorable="d"
              d:DesignHeight="800"
              d:DesignWidth="1320">
@@ -23,7 +24,7 @@
                           ItemsSource="{Binding RTD_Entities}">
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}"
+                        <TextBlock Text="{Binding Id_name_treeview}"
                                    FontSize="18" />
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
@@ -33,7 +34,7 @@
                           ItemsSource="{Binding TermoSprega_Entities}">
                 <TreeViewItem.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}"
+                        <TextBlock Text="{Binding Id_name_treeview}"
                                    FontSize="18" />
                     </DataTemplate>
                 </TreeViewItem.ItemTemplate>
@@ -51,7 +52,8 @@
 
         </TreeView>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1"
+              Margin="0,-20,0,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -88,11 +90,19 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
+            <Label Content="0"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
+
 
             <Border Grid.Row="0"
                     Grid.Column="0"
                     BorderBrush="{Binding BorderBrushCollection[0]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -122,14 +132,18 @@
             </Border>
             <Button Grid.Row="0"
                     Grid.Column="0"
-                    Content="X"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Command="{Binding FreeUpCanvas}"
                     CommandParameter="0"
-                    Margin="0,0,40,30" />
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Margin="0,0,40,30">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -143,7 +157,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[0]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -158,11 +172,17 @@
                 </StackPanel>
             </StackPanel>
 
-
+            <Label Content="1"
+                   Grid.Row="0"
+                   Grid.Column="1"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
             <Border Grid.Row="0"
                     Grid.Column="1"
                     BorderBrush="{Binding BorderBrushCollection[1]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -193,14 +213,18 @@
             </Border>
             <Button Grid.Row="0"
                     Grid.Column="1"
-                    Content="X"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="1" />
+                    CommandParameter="1">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -214,7 +238,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[1]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -229,10 +253,17 @@
                 </StackPanel>
             </StackPanel>
 
+            <Label Content="2"
+                   Grid.Row="0"
+                   Grid.Column="2"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
             <Border Grid.Row="0"
                     Grid.Column="2"
                     BorderBrush="{Binding BorderBrushCollection[2]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -263,14 +294,18 @@
             </Border>
             <Button Grid.Row="0"
                     Grid.Column="2"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="2" />
+                    CommandParameter="2">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -284,7 +319,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[2]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -299,10 +334,17 @@
                 </StackPanel>
             </StackPanel>
 
+            <Label Content="3"
+                   Grid.Row="0"
+                   Grid.Column="3"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
             <Border Grid.Row="0"
                     Grid.Column="3"
                     BorderBrush="{Binding BorderBrushCollection[3]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -333,14 +375,18 @@
             </Border>
             <Button Grid.Row="0"
                     Grid.Column="3"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="3" />
+                    CommandParameter="3">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -354,7 +400,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[3]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -369,10 +415,17 @@
                 </StackPanel>
             </StackPanel>
 
+            <Label Content="4"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
             <Border Grid.Row="1"
                     Grid.Column="0"
                     BorderBrush="{Binding BorderBrushCollection[4]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -403,14 +456,18 @@
             </Border>
             <Button Grid.Row="1"
                     Grid.Column="0"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="4" />
+                    CommandParameter="4">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -425,7 +482,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[4]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -440,10 +497,18 @@
                 </StackPanel>
             </StackPanel>
 
+
+            <Label Content="5"
+                   Grid.Row="1"
+                   Grid.Column="1"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
             <Border Grid.Row="1"
                     Grid.Column="1"
                     BorderBrush="{Binding BorderBrushCollection[5]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -474,14 +539,18 @@
             </Border>
             <Button Grid.Row="1"
                     Grid.Column="1"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="5" />
+                    CommandParameter="5">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -496,7 +565,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[5]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -511,10 +580,19 @@
                 </StackPanel>
             </StackPanel>
 
+
+            <Label Content="6"
+                   Grid.Row="1"
+                   Grid.Column="2"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
+
             <Border Grid.Row="1"
                     Grid.Column="2"
                     BorderBrush="{Binding BorderBrushCollection[6]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -545,14 +623,18 @@
             </Border>
             <Button Grid.Row="1"
                     Grid.Column="2"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="6" />
+                    CommandParameter="6">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -567,7 +649,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[6]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -582,10 +664,18 @@
                 </StackPanel>
             </StackPanel>
 
+
+            <Label Content="7"
+                   Grid.Row="1"
+                   Grid.Column="3"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
             <Border Grid.Row="1"
                     Grid.Column="3"
                     BorderBrush="{Binding BorderBrushCollection[7]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -616,14 +706,18 @@
             </Border>
             <Button Grid.Row="1"
                     Grid.Column="3"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="7" />
+                    CommandParameter="7">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -638,7 +732,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[7]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -653,10 +747,17 @@
                 </StackPanel>
             </StackPanel>
 
+            <Label Content="8"
+                   Grid.Row="2"
+                   Grid.Column="0"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
             <Border Grid.Row="2"
                     Grid.Column="0"
                     BorderBrush="{Binding BorderBrushCollection[8]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
                 <ContentControl Width="150"
@@ -687,14 +788,18 @@
             </Border>
             <Button Grid.Row="2"
                     Grid.Column="0"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="8" />
+                    CommandParameter="8">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -709,7 +814,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[8]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -724,12 +829,21 @@
                 </StackPanel>
             </StackPanel>
 
+            <Label Content="9"
+                   Grid.Row="2"
+                   Grid.Column="1"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
+
             <Border Grid.Row="2"
                     Grid.Column="1"
                     BorderBrush="{Binding BorderBrushCollection[9]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
                     Height="150">
+
                 <ContentControl Width="150"
                                 Content="{Binding Path=CanvasCollection[9]}">
                     <i:Interaction.Triggers>
@@ -758,14 +872,18 @@
             </Border>
             <Button Grid.Row="2"
                     Grid.Column="1"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="9" />
+                    CommandParameter="9">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -780,7 +898,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasIDCollection[9]}"
                                FontSize="18"
-                               Width="30" />
+                               Width="40" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="0,-10,0,0"
@@ -795,13 +913,20 @@
                 </StackPanel>
             </StackPanel>
 
+            <Label Content="10"
+                   Grid.Row="2"
+                   Grid.Column="2"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
+
             <Border Grid.Row="2"
                     Grid.Column="2"
                     BorderBrush="{Binding BorderBrushCollection[10]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
-                    Height="150"
-                    Margin="0 0 0 10">
+                    Height="150">
                 <ContentControl Width="150"
                                 Content="{Binding Path=CanvasCollection[10]}">
                     <i:Interaction.Triggers>
@@ -830,14 +955,18 @@
             </Border>
             <Button Grid.Row="2"
                     Grid.Column="2"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="10" />
+                    CommandParameter="10">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -863,17 +992,24 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasValueCollection[10]}"
                                FontSize="18"
-                               Width="50" />
+                               Width="30" />
                 </StackPanel>
             </StackPanel>
 
+
+            <Label Content="11"
+                   Grid.Row="2"
+                   Grid.Column="3"
+                   FontSize="20"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Margin="0,0,0,180" />
             <Border Grid.Row="2"
                     Grid.Column="3"
                     BorderBrush="{Binding BorderBrushCollection[11]}"
-                    BorderThickness="1"
+                    BorderThickness="2"
                     Width="150"
-                    Height="150"
-                    Margin="0 0 0 10">
+                    Height="150">
                 <ContentControl Width="150"
                                 Content="{Binding Path=CanvasCollection[11]}">
                     <i:Interaction.Triggers>
@@ -902,14 +1038,18 @@
             </Border>
             <Button Grid.Row="2"
                     Grid.Column="3"
-                    Content="X"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
                     Height="20"
                     Width="20"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,40,30"
                     Command="{Binding FreeUpCanvas}"
-                    CommandParameter="11" />
+                    CommandParameter="11">
+                <fa5:SvgAwesome Icon="Solid_MinusCircle"
+                                Height="20" />
+            </Button>
 
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Bottom"
@@ -935,7 +1075,7 @@
                                VerticalAlignment="Center"
                                Text="{Binding CanvasValueCollection[11]}"
                                FontSize="18"
-                               Width="50" />
+                               Width="30" />
                 </StackPanel>
             </StackPanel>
 
