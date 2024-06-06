@@ -418,10 +418,11 @@ namespace NetworkService.ViewModel
 			int entityId = int.Parse(parameters[1]);
 			int entityIndexInCollection = -1;
 			bool hasPair = idIndex_Pair.TryGetValue(entityId, out entityIndexInCollection);
+
 			if (entityIndexInCollection != -1 && hasPair)
 			{
 				graphViewModel.SelectedEntity = Entities[entityIndexInCollection];
-				graphViewModel.SelectedItemId = $"Displaying {entityId}"; 
+				graphViewModel.SelectedItemId = $"Displaying Entity {entityId}"; 
 			}
 			else
 			{
@@ -778,12 +779,13 @@ namespace NetworkService.ViewModel
 								int id = Int32.Parse(splited[0].Split('_')[1]);
 								abs_id = id;
 
-								Entities[id].Value = Math.Round(Double.Parse(splited[1]), 2);
+								Entities[id].Value = double.Parse(splited[1]);
 								AddValueToList(Entities[id]);
 								int id_of_entity = Entities[id].Id;
 								if (!idIndex_Pair.ContainsKey(id_of_entity))
+								{
 									idIndex_Pair.Add(id_of_entity, id);
-
+								}
 								UpdateCanvasValue(id_of_entity);
 							}
 						}
@@ -824,6 +826,7 @@ namespace NetworkService.ViewModel
 				Entities = saveState.SavedState as ObservableCollection<Entity>;
 				//refresh the view
 				CurrentViewModel = entitiesViewModel;
+				CurrentViewModel = new EntitiesViewModel();
 			}
 			else if (saveState.CommandType == CommandType.CanvasManipulation)
 			{
