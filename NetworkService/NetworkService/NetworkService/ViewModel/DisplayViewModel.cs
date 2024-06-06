@@ -175,46 +175,56 @@ namespace NetworkService.ViewModel
 		private Point GetPointForCanvasIndex(int canvasIndex)
 		{
 			double x = 0, y = 0;
-
-			for (int row = 0; row < 3; row++)
+			switch(canvasIndex)
 			{
-				for (int col = 0; col < 4; col++)
-				{
-					int currentIndex = row * 4 + col;
-
-					if (canvasIndex == currentIndex)
-					{
-						switch(row)
-						{
-							case 0:
-								y = 135;
-								break;
-							case 1:
-								y = 385;
-								break;
-							case 2:
-								y = 640;
-								break;
-						}
-
-						switch(col)
-						{
-							case 0:
-								x = 130;
-								break;
-							case 1:
-								x = 410;
-								break;
-							case 2:
-								x = 675;
-								break;
-							case 3:
-								x = 950;
-								break;
-						}
-						break;
-					}
-				}
+				case 0:
+					x = 130;
+					y = 135;
+					break;
+				case 1:
+					x = 410;
+					y = 135;
+					break;
+				case 2:
+					x = 675;
+					y = 135;
+					break;
+				case 3:
+					x = 950;
+					y = 135;
+					break;
+				case 4:
+					x = 130;
+					y = 385;
+					break;
+				case 5:
+					x = 410;
+					y = 385;
+					break;
+				case 6:
+					x = 675;
+					y = 385;
+					break;
+				case 7:
+					x = 950;
+					y = 385;
+					break;
+				case 8:
+					x = 130;
+					y = 640;
+					break;
+				case 9:
+					x = 410;
+					y = 640;
+					break;
+				case 10:
+					x = 675;
+					y = 640;
+					break;
+				case 11:
+					x = 950;
+					y = 640;
+					break;
 			}
 			return new Point(x, y);
 		}
