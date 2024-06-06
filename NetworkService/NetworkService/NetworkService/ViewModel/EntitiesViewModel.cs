@@ -247,7 +247,7 @@ namespace NetworkService.ViewModel
 			}
 			ToastNotify.RaiseToast(
 						"Success",
-						$"Entity created: {entity.Id}",
+						$"Entity {entity.Id} added successfully",
 						Notification.Wpf.NotificationType.Success);
 			ResetFields();
 		}

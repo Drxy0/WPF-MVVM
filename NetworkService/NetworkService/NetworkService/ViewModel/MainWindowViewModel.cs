@@ -279,6 +279,9 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
+
+
+		#region Terminal
 		private void OnShiftUp(object e)
 		{
 			if (TerminalDisplayHeight < 400)
@@ -294,13 +297,11 @@ namespace NetworkService.ViewModel
 			terminalVisible = !terminalVisible;
 			ShowHide_Terminal();
 		}
-
 		private void OnShiftBacktickPressed(object parameter)
 		{
 			terminalVisible = !terminalVisible;
 			ShowHide_Terminal();
 		}
-
 		private void ShowHide_Terminal()
 		{
 			if (terminalVisible == true)
@@ -319,7 +320,6 @@ namespace NetworkService.ViewModel
 			}
 
 		}
-
 		private void OnShift1(object parameter)
 		{
 			OnNav("entities");
@@ -332,7 +332,7 @@ namespace NetworkService.ViewModel
 		{
 			OnNav("graph");
 		}
-		#region Terminal
+
 		private void OnKeyPressed(object parameter)
 		{
 			if (parameter is KeyEventArgs e)
@@ -634,8 +634,13 @@ namespace NetworkService.ViewModel
 			{
 				TerminalDisplay += '\n' + "Input error, correct syntax is: add (id: int) (name: string) (type: RTD or TermoSprega)";
 				TerminalInput = string.Empty;
+				return;
 			}
-			else if (parameters[3].ToLower() != "rtd" && parameters[3].ToLower() != "termosprega")
+			if (parameters[3].ToLower() == "ts" || parameters[3].ToLower() == "termo")
+			{
+				parameters[3] = "termosprega";
+			}
+			if (parameters[3].ToLower() != "rtd" && parameters[3].ToLower() != "termosprega")
 			{
 				TerminalDisplay += '\n' + "Add Entity Error: avaivable types are RTD and TermoSprega";
 				TerminalInput = string.Empty;
@@ -653,11 +658,11 @@ namespace NetworkService.ViewModel
 				{
 					entitiesViewModel.RtdChecked = false;
 					entitiesViewModel.TermoChecked = true;
+					
 				}
 
 				entitiesViewModel.OnAdd();
-
-				TerminalDisplay += '\n' + "Entity added successfully";
+				TerminalDisplay += '\n' + $"Entity {parameters[1]} added successfully";
 			}
 		}
 		private void HandleDeleteEntity()
@@ -719,6 +724,9 @@ namespace NetworkService.ViewModel
 			}
 		}
 		#endregion
+
+
+
 		private void createListener()
         {
             var tcp = new TcpListener(IPAddress.Any, 25675);

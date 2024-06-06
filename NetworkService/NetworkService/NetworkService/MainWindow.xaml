@@ -104,7 +104,7 @@
 
         <Button x:Name="EntitiesViewButton"
                 VerticalAlignment="Top"
-                Margin="0,230,0,0"
+                Margin="0,240,0,0"
                 ToolTip="Network Entities View"
                 Cursor="Hand"
                 Command="{Binding NavCommand}"
@@ -118,7 +118,7 @@
 
         <Button x:Name="DisplayViewButton"
                 VerticalAlignment="Top"
-                Margin="0,340,0,0"
+                Margin="0,350,0,0"
                 ToolTip="Network Display View"
                 Cursor="Hand"
                 Command="{Binding NavCommand}"
@@ -132,7 +132,7 @@
         <Button x:Name="GraphViewButton"
                 VerticalAlignment="Top"
                 ToolTip="Measurment Graph View"
-                Margin="0,450,0,0"
+                Margin="0,460,0,0"
                 Cursor="Hand"
                 Command="{Binding NavCommand}"
                 CommandParameter="graph"
