@@ -45,10 +45,10 @@
                     Key="D3"
                     Modifiers="Shift" />
         <KeyBinding Command="{Binding ShiftUp_Command}"
-                    Key="Up"
+                    Key="OemCloseBrackets"
                     Modifiers="Shift" />
         <KeyBinding Command="{Binding ShiftDown_Command}"
-                    Key="Down"
+                    Key="OemPipe"
                     Modifiers="Shift" />
     </Window.InputBindings>
 

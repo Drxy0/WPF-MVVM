@@ -13,6 +13,8 @@ using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Documents;
 using Line = NetworkService.Model.Line;
+using static System.Windows.Forms.LinkLabel;
+using static System.Windows.Forms.AxHost;
 
 namespace NetworkService.ViewModel
 {
@@ -25,12 +27,16 @@ namespace NetworkService.ViewModel
 		private bool isLineSourceSelected = false;
 		private int sourceCanvasIndex = -1;
 		private int destinationCanvasIndex = -1;
-		
+
+		private bool invoked = false;
+
 		private Entity selectedEntity;
 
 		private static ObservableCollection<string> canvasIDCollection = new ObservableCollection<string> { "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"};
 		private static ObservableCollection<string> canvasValueCollection = new ObservableCollection<string> { "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X" };
 		private static ObservableCollection<string> borderBrushCollection= new ObservableCollection<string> { "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black"};
+
+		public static Pair<int, Entity> AddedToGrid { get; set; } = new Pair<int, Entity>();
 
 		public static ObservableCollection<Line> LineCollection { get; set; }
 		public static ObservableCollection<Canvas> CanvasCollection { get; set; }
@@ -67,6 +73,8 @@ namespace NetworkService.ViewModel
 			RightMouseButtonUpOnCanvas = new MyICommand<object>(OnMouseRightButtonUp);
 			LeftMouseButtonDownOnCanvas = new MyICommand<object>(OnLeftMouseButtonDown);
 			FreeUpCanvas = new MyICommand<object>(OnFreeUpCanvas);
+
+			AddedToGrid = new Pair<int, Entity>(-1, new Entity());
 		}
 
 
@@ -110,11 +118,15 @@ namespace NetworkService.ViewModel
 							Destination = currentLine.Destination
 						});
 
+						SaveStateLine();
+
 						isLineSourceSelected = false;
 
 						linePoint1 = new Point();
 						linePoint2 = new Point();
 						currentLine = new Line();
+
+
 					}
 					else
 					{
@@ -280,53 +292,21 @@ namespace NetworkService.ViewModel
 					image.EndInit();
 
 
-					// Create and initialize list
-					List<object> list = new List<object>();
+					SaveState(index);
 
-					// Create deep copies of the collections
-					ObservableCollection<string> mojCanvasIDCollection = DeepCopyObservableCollection(canvasIDCollection);
-					ObservableCollection<string> mojCanvasValueCollection = DeepCopyObservableCollection(CanvasValueCollection);
-					ObservableCollection<Canvas> mojCanvasCollection = DeepCopyObservableCollection(CanvasCollection);
-					ObservableCollection<Entity> mojEntity = new ObservableCollection<Entity>();
-
-					// Add copies to the list
-					list.Add(mojCanvasIDCollection);
-					list.Add(mojCanvasValueCollection);
-					list.Add(mojCanvasCollection);
-
-					// Add other elements
-					if (rtd && draggingSourceIndex == -1)
-					{
-						list.Add("rtd");
-						mojEntity = DeepCopyObservableCollection(RTD_Entities);
-					}
-					else
-					{
-						list.Add("termosprega");
-						mojEntity = DeepCopyObservableCollection(TermoSprega_Entities);
-					}
-					list.Add(mojEntity);
-					list.Add(index.ToString());
-
-					// Save state
-					MainWindowViewModel.Undo = new SaveState<CommandType, object>(CommandType.CanvasManipulation, list);
-
-					// Modify collections
 					CanvasIDCollection[index] = draggedItem.Id.ToString();
 					CanvasValueCollection[index] = draggedItem.Value.ToString();
 					CanvasCollection[index].Background = new ImageBrush(image);
 					CanvasCollection[index].Resources.Add("taken", true);
 					CanvasCollection[index].Resources.Add("data", draggedItem);
 
+					AddedToGrid = new Pair<int, Entity>(index, draggedItem);
+
+					
 					// PREVLACENJE IZ DRUGOG CANVASA
 					if (draggingSourceIndex != -1)
 					{
-						CanvasCollection[draggingSourceIndex].Background = Brushes.LightGray;
-						CanvasCollection[draggingSourceIndex].Resources.Remove("taken");
-						CanvasCollection[draggingSourceIndex].Resources.Remove("data");
-						CanvasIDCollection[draggingSourceIndex] = "X";
-						CanvasValueCollection[draggingSourceIndex] = "X";
-						BorderBrushCollection[draggingSourceIndex] = "Black";
+						ResetCanvas(draggingSourceIndex);
 						UpdateLinesForCanvas(draggingSourceIndex, index);
 						if (sourceCanvasIndex != -1)
 						{
@@ -354,9 +334,14 @@ namespace NetworkService.ViewModel
 			dragging = false;
 		}
 
-		public static ObservableCollection<T> DeepCopyObservableCollection<T>(ObservableCollection<T> original)
+		public void ResetCanvas(int _draggingSouceIndex)
 		{
-			return new ObservableCollection<T>(original.Select(item => item));
+			CanvasCollection[_draggingSouceIndex].Background = Brushes.LightGray;
+			CanvasCollection[_draggingSouceIndex].Resources.Remove("taken");
+			CanvasCollection[_draggingSouceIndex].Resources.Remove("data");
+			CanvasIDCollection[_draggingSouceIndex] = "X";
+			CanvasValueCollection[_draggingSouceIndex] = "X";
+			BorderBrushCollection[_draggingSouceIndex] = "Black";
 		}
 
 		private void UpdateLinesForCanvas(int sourceCanvas, int destinationCanvas)
@@ -398,7 +383,7 @@ namespace NetworkService.ViewModel
 			}
 		}
 
-		private void InitializeCanvases()
+		public void InitializeCanvases()
 		{
 			CanvasCollection = new ObservableCollection<Canvas>();
 			for (int i = 0; i < 12; i++)
@@ -410,20 +395,6 @@ namespace NetworkService.ViewModel
 				});
 			}
 		}
-
-		public void DeleteEntityFromCanvas(Entity e)
-		{
-			int canvasIndex = GetCanvasIndexForEntityId(e.Id);
-
-			if (canvasIndex != -1)
-			{
-				CanvasCollection[canvasIndex].Background = Brushes.LightGray;
-				CanvasCollection[canvasIndex].Resources.Remove("taken");
-				CanvasCollection[canvasIndex].Resources.Remove("data");
-
-			}
-		}
-
 		private int GetCanvasIndexForEntityId(int id)
 		{
 			for (int i = 0; i < CanvasCollection.Count; i++)
@@ -441,6 +412,12 @@ namespace NetworkService.ViewModel
 		{
 			int index = Convert.ToInt32(parameter);
 
+			if (!CanvasCollection[index].Resources.Contains("taken") && invoked==false)
+			{
+				ToastNotify.RaiseToast("Error", "There is nothing to remove!", Notification.Wpf.NotificationType.Warning);
+				return;
+			}
+
 			if (CanvasCollection[index].Resources["taken"] != null)
 			{
 				Entity tmpEntity = (Entity)CanvasCollection[index].Resources["data"];
@@ -448,12 +425,32 @@ namespace NetworkService.ViewModel
 					RTD_Entities.Add(tmpEntity);
 				else
 					TermoSprega_Entities.Add(tmpEntity);
-
-				CanvasCollection[index].Background = Brushes.LightGray;
-				CanvasCollection[index].Resources.Remove("taken");
-				CanvasCollection[index].Resources.Remove("data");
+				
+				ResetCanvas(index);
+				DeleteLinesForCanvas(index);
 			}
 		}
 
+		public void InvokeOnFreeUpCanvas(int parameter)
+		{
+			invoked = true;
+			OnFreeUpCanvas((object)parameter);
+			invoked = false;
+		}
+
+		public static void SaveState(int index)
+		{
+			int integer = AddedToGrid.Item1;
+			Entity e = AddedToGrid.Item2 as Entity;
+			Pair<int, Entity> entityState = new Pair<int, Entity>(integer, e);
+			List<object> state = new List<object>() { entityState, index.ToString() };
+			MainWindowViewModel.Undo = new SaveState<CommandType, object>(CommandType.CanvasManipulation, state);
+		}
+
+		public static void SaveStateLine()
+		{
+			int lastIndex = LineCollection.Count - 1;
+			MainWindowViewModel.Undo = new SaveState<CommandType, object>(CommandType.LineManipulation, lastIndex.ToString());
+		}
 	}
 }

@@ -19,6 +19,8 @@ using System.IO;
 using System.Reflection;
 using NetworkService.Views;
 using System.Windows.Media;
+using System.ComponentModel;
+using System.Windows.Media.Imaging;
 //using System.Data;
 
 namespace NetworkService.ViewModel
@@ -29,22 +31,24 @@ namespace NetworkService.ViewModel
 		// ######### ZAMENITI stvarnim brojem elemenata
 		//           zavisno od broja entiteta u listi
 
-		private string terminalDisplayVisible;
-		private string terminalInputVisible;
-		private string terminalLabelVisible;
-		private static bool terminalVisible = false;
-		private bool idFound = false;
-		private int caretIndexTerminal;
 
+
+		private bool idFound = false;
 		private static int abs_id = -1;
+		private int previousCanvasIndex_PutCommand = -1;
 
 		private string entitiesIcon;
 		private string displayIcon;
 		private string graphIcon;
 		private string terminalIcon;
 
+		#region Teminal properties
+		private string terminalDisplayVisible;
+		private string terminalInputVisible;
+		private string terminalLabelVisible;
+		private static bool terminalVisible = false;
+		private int caretIndexTerminal;
 		private int terminalDisplayHeight;
-
 		private static string help = @"
 	COMMAND LIST
 
@@ -57,7 +61,6 @@ namespace NetworkService.ViewModel
 	Move an entity from one canvas position to another:	move (sourceCanvasIndex: int) (destinationCanvasIndex: int)
 	Show graph for selected entity:				show (id: int)
 					";
-
 		public int CaretIndexTerminal
 		{
 			get { return caretIndexTerminal; }
@@ -82,8 +85,6 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
-
-
 		public string TerminalInputVisible
 		{
 			get { return terminalInputVisible; }
@@ -96,7 +97,6 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
-
 		public string TerminalLabelVisible
 		{
 			get { return terminalLabelVisible; }
@@ -109,7 +109,6 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
-
 		public int TerminalDisplayHeight
 		{
 			get { return terminalDisplayHeight; }
@@ -122,7 +121,7 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
-
+		#endregion
 		public MyICommand<string> NavCommand { get; private set; }
         public MyICommand<Window> CloseWindowCommand { get; private set; }
 		public MyICommand UndoCommand { get; set; }
@@ -172,6 +171,7 @@ namespace NetworkService.ViewModel
 			set { terminalIcon = value; OnPropertyChanged(nameof(TerminalIcon)); }
 		}
 
+		#region Commands
 		public ICommand KeyPressedCommand { get; }
 		public ICommand ShiftBacktickCommand { get; }
 		public ICommand Shift1_Command { get; }
@@ -179,8 +179,8 @@ namespace NetworkService.ViewModel
 		public ICommand Shift3_Command { get; }
 		public ICommand ShiftUp_Command {  get; }
 		public ICommand ShiftDown_Command {  get; }
-
 		public ICommand TerminalCommand { get; private set; }
+		#endregion
 
 		private string terminalInput;
 		public string TerminalInput
@@ -236,10 +236,10 @@ namespace NetworkService.ViewModel
             CurrentViewModel = entitiesViewModel;
 
 			PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
-
 			InitialiseFields();
 			ShowHide_Terminal();
 		}
+
 		private void InitialiseFields()
 		{
 			TerminalInput = string.Empty;
@@ -502,9 +502,16 @@ namespace NetworkService.ViewModel
 			int indexOfElement = -1;
 			idIndex_Pair.TryGetValue(id, out indexOfElement);
 
+			if (previousCanvasIndex_PutCommand != -1)
+			{
+				displayViewModel.InvokeOnFreeUpCanvas(previousCanvasIndex_PutCommand);
+			}
+
+
 			displayViewModel.OnSelectionChanged(Entities[indexOfElement]);
 			displayViewModel.OnDrop(canvasIndex);
 
+			previousCanvasIndex_PutCommand = canvasIndex;
 			TerminalInput = string.Empty;
 		}
 		private void HandlePopEntityFromCanvas()
@@ -515,6 +522,11 @@ namespace NetworkService.ViewModel
 				if (!int.TryParse(id, out int result))   //if not integer
 				{
 					TerminalDisplay += '\n' + $"Input error: {id} is not an integer. Correct syntax is: pop (id: int)...";
+				}
+				else if (result < 0 || result > 11)
+				{
+					TerminalDisplay += '\n' + "Error: Incorrect canvas index value. Correct values are 0 to 11";
+					return;
 				}
 				else
 				{
@@ -792,42 +804,17 @@ namespace NetworkService.ViewModel
 			set
 			{
 				SetProperty(ref currentViewModel, value);
+				OnPropertyChanged(nameof(CurrentViewModel));
 			}
 		}
-
 		private void OnUndo()
 		{
 			SaveState<CommandType, object> saveState = Undo;
 
-			/*if (saveState.CommandType == CommandType.SwitchViews)		//Vraćanje na prethodni view
-			{
-				System.Type viewType = saveState.SavedState as System.Type;
-
-				if (viewType == typeof(EntitiesViewModel))
-				{
-					CurrentViewModel = entitiesViewModel;
-					Undo = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
-					NavEntities();
-				}
-				else if (viewType == typeof(DisplayViewModel))
-				{
-					CurrentViewModel = displayViewModel;
-					Undo = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
-					NavDisplay();
-				}
-				else if (viewType == typeof(GraphViewModel))
-				{
-					CurrentViewModel = graphViewModel;
-					Undo = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
-					NavGraph();
-				}
-			}*/
-
 			if (saveState.CommandType == CommandType.EntityManipulation)
 			{
 				Entities = saveState.SavedState as ObservableCollection<Entity>;
-				//refreshing the list
-				CurrentViewModel = graphViewModel;
+				//refresh the view
 				CurrentViewModel = entitiesViewModel;
 			}
 			else if (saveState.CommandType == CommandType.CanvasManipulation)
@@ -835,30 +822,63 @@ namespace NetworkService.ViewModel
 				Mutex.WaitOne();
 
 				List<object> state = saveState.SavedState as List<object>;
-				DisplayViewModel.CanvasIDCollection = state[0] as ObservableCollection<string>;
-				DisplayViewModel.CanvasValueCollection = state[1] as ObservableCollection<string>;
-				DisplayViewModel.CanvasCollection = state[2] as ObservableCollection<Canvas>;
-				string rtd = state[3] as string;
-				if (rtd == "rtd")
+				Pair<int, Entity> entityState = state[0] as Pair<int, Entity>;
+				int nuIndex = int.Parse(state[1] as string);
+
+				if (entityState.Item1 == -2)
 				{
-					DisplayViewModel.RTD_Entities =  state[4] as ObservableCollection<Entity>;
+					ToastNotify.RaiseToast("Error", "There is nothing to undo!", Notification.Wpf.NotificationType.Warning);
+					return;
+				}
+				else if (entityState.Item1 == -1)
+				{
+					displayViewModel.InvokeOnFreeUpCanvas(nuIndex);
 				}
 				else
 				{
-					DisplayViewModel.TermoSprega_Entities = state[4] as ObservableCollection<Entity>;
+					DisplayViewModel.CanvasIDCollection[entityState.Item1] = entityState.Item2.Id.ToString();
+					DisplayViewModel.CanvasValueCollection[entityState.Item1] = entityState.Item2.Value.ToString();
+
+					BitmapImage image = new BitmapImage();
+					image.BeginInit();
+
+					if (entityState.Item2.Type.ToString() == "RTD")
+					{
+						image.UriSource = new Uri("pack://application:,,,/NetworkService;component/Assets/RTD.png");
+					}
+					else
+					{
+						image.UriSource = new Uri("pack://application:,,,/NetworkService;component/Assets/TermoSprega.png");
+					}
+
+					image.EndInit();
+					try
+					{
+						DisplayViewModel.CanvasCollection[entityState.Item1].Background = new ImageBrush(image);
+						DisplayViewModel.CanvasCollection[entityState.Item1].Resources.Add("taken", true);
+						DisplayViewModel.CanvasCollection[entityState.Item1].Resources.Add("data", entityState.Item2);
+						displayViewModel.ResetCanvas(nuIndex);
+					}
+					catch { }
+					DisplayViewModel.AddedToGrid = new Pair<int, Entity>(-2, new Entity());
 				}
-				int index = int.Parse(state[5] as string);
-
-				//DisplayViewModel.CanvasCollection[index].Background = Brushes.LightGray;
-				//DisplayViewModel.CanvasCollection[index].Resources.Remove("taken");
-				//DisplayViewModel.CanvasCollection[index].Resources.Remove("data");
-
-				//refresh view somehow
-
+				DisplayViewModel.SaveState(nuIndex);
+				Mutex.ReleaseMutex();
+			}
+			else if(saveState.CommandType == CommandType.LineManipulation)
+			{
+				Mutex.WaitOne();
+				int lastIndex = int.Parse(saveState.SavedState as string);
+				if (lastIndex >= 0)
+				{
+					DisplayViewModel.LineCollection.RemoveAt(lastIndex);
+				}
+				DisplayViewModel.SaveStateLine();
 				Mutex.ReleaseMutex();
 			}
 		}
-		
+
+		#region Update SideBar Icons
 		private void NavEntities()
 		{
 			EntitiesIcon = "Assets/entities_white.png";
@@ -877,6 +897,7 @@ namespace NetworkService.ViewModel
 			DisplayIcon = "Assets/display.png";
 			GraphIcon = "Assets/graph_white.png";
 		}
+		#endregion
 
 		private void OnNav(string destination)
 		{

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetworkService.Model
 {
-	public enum CommandType { SwitchViews, EntityManipulation, CanvasManipulation }
+	public enum CommandType { SwitchViews, EntityManipulation, CanvasManipulation, LineManipulation }
 	public class SaveState<TFirst, TSecond>
 	{
 		public TFirst CommandType { get; set; }
