@@ -115,6 +115,14 @@ namespace NetworkService.ViewModel
 				SelectedEntity = Entities[0];
 			}
 
+			init();
+
+			//timer to update visuals on every tick
+			_timer = new Timer(UpdatePositions, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(200));
+		}
+
+		private void init()
+		{
 			StartPoint = new Point(130, 215);
 
 			LinePoint_1 = new Point(130, 215);
@@ -147,16 +155,12 @@ namespace NetworkService.ViewModel
 			Time_3 = "00:00";
 			Time_4 = "00:00";
 			Time_5 = "00:00";
-
-			//setting up an update timer to update the graph visuals
-			_timer = new Timer(UpdatePositions, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(200));
 		}
 
 		private void UpdatePositions(object state)
 		{
 			if (SelectedEntity != null && Application.Current != null)
 			{
-
 				Application.Current.Dispatcher.Invoke(() =>
 				{
 					if (SelectedEntity.Last_5_Values.Count > 0)

@@ -222,52 +222,65 @@ namespace NetworkService.ViewModel
 			NavCommand = new MyICommand<string>(OnNav);
 			TerminalCommand = new RelayCommand(OnTerminalButton);
 			CloseWindowCommand = new MyICommand<Window>(CloseWindow);
+
+			#region Keyboard Shortcuts
 			ShiftBacktickCommand = new RelayCommand(OnShiftBacktickPressed);
 			Shift1_Command = new RelayCommand(OnShift1);
 			Shift2_Command = new RelayCommand(OnShift2);
 			Shift3_Command = new RelayCommand(OnShift3);
 			CtrlZ_Command = new RelayCommand(OnCtrlZ);
 			CtrlX_Command = new RelayCommand(OnCtrlX);
-
 			ShiftUp_Command = new RelayCommand(OnShiftUp);
 			ShiftDown_Command = new RelayCommand(OnShiftDown);
-			UndoCommand = new MyICommand(OnUndo);
+			#endregion
+			
 			PreviousViewCommand = new MyICommand(OnPreviousView);
 			KeyPressedCommand = new RelayCommand(OnKeyPressed);
-
+			UndoCommand = new MyICommand(OnUndo);
 			Entities = new ObservableCollection<Entity>();
-
-			Entities.Add(new Entity
-			{
-				Id = 1,
-				Name = "Jedan",
-				Type = new EntityType(Model.Type.RTD),
-			});
-
-			Entities.Add(new Entity
-			{
-				Id = 2,
-				Name = "Dva",
-				Type = new EntityType(Model.Type.RTD),
-			});
-
-			Entities.Add(new Entity
-			{
-				Id = 5,
-				Name = "Pet",
-				Type = new EntityType(Model.Type.TermoSprega),
-			});
 
 			entitiesViewModel = new EntitiesViewModel();
             displayViewModel = new DisplayViewModel();
             graphViewModel = new GraphViewModel();
             CurrentViewModel = entitiesViewModel;
 
+			init();
 			PreviousView = new SaveState<CommandType, object>(CommandType.SwitchViews, CurrentViewModel.GetType());
 			InitialiseFields();
 			ShowHide_Terminal();
 		}
+		private void init()
+		{
+			Entity e1 = new Entity
+			{
+				Id = 1,
+				Name = "Jedan",
+				Type = new EntityType(Model.Type.RTD),
+				Id_name_treeview = "1 - Jedan"
+			};
+			Entities.Add(e1);
+			RTD_Entities.Add(e1);
 
+			Entity e2 = new Entity
+			{
+				Id = 2,
+				Name = "Dva",
+				Type = new EntityType(Model.Type.RTD),
+				Id_name_treeview = "2 - Dva"
+			};
+			Entities.Add(e2);
+			RTD_Entities.Add(e2);
+
+			Entity e3 = new Entity
+			{
+				Id = 5,
+				Name = "Pet",
+				Type = new EntityType(Model.Type.TermoSprega),
+				Id_name_treeview = "5 - Pet"
+			};
+			Entities.Add(e3);
+			TermoSprega_Entities.Add(e3);
+		}
 
 		private void OnPreviousView()
 		{

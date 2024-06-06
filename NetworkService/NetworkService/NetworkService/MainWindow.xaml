@@ -106,7 +106,7 @@
                             Stretch="Uniform" />
             </Button.Background>
         </Button>
-        
+
 
         <Button x:Name="EntitiesViewButton"
                 VerticalAlignment="Top"

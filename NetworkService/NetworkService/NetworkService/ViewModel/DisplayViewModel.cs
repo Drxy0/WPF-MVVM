@@ -125,13 +125,10 @@ namespace NetworkService.ViewModel
 						linePoint1 = new Point();
 						linePoint2 = new Point();
 						currentLine = new Line();
-
-
 					}
 					else
 					{
 						// Pocetak i kraj linije su u istom canvasu
-
 						isLineSourceSelected = false;
 
 						linePoint1 = new Point();
@@ -420,6 +417,17 @@ namespace NetworkService.ViewModel
 		}
 		public void OnFreeUpCanvas(object parameter)
 		{
+			MessageBoxResult result = MessageBox.Show(
+					"Are you sure you want to remove the selected item?",
+					"Confirm Deletion",
+					MessageBoxButton.YesNo,
+					MessageBoxImage.Warning
+				);
+
+			if (result == MessageBoxResult.No)
+				return;
+
+
 			int index = Convert.ToInt32(parameter);
 
 			if (!CanvasCollection[index].Resources.Contains("taken") && invoked==false)

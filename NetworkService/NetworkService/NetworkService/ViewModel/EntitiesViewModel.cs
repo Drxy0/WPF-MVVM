@@ -191,16 +191,18 @@ namespace NetworkService.ViewModel
 				IDErrorTextBlock = string.Empty;
 				IdBorderBrush = "Gray";
 			}
-
-			if (MainWindowViewModel.Entities.Any(e => e.Id == int.Parse(IdText)))
+			if (!onAddReturn)
 			{
-				//Show Toast Notification for same id;
-				IdText = string.Empty;
-				IDErrorTextBlock = "Error: Id already exists!";
-				IdBorderBrush = "Red";
-				Toast_OnAddError("Id already exists!");
-				onAddReturn = true;
+				if (MainWindowViewModel.Entities.Any(e => e.Id == int.Parse(IdText)))
+				{
+					//Show Toast Notification for same id;
+					IdText = string.Empty;
+					IDErrorTextBlock = "Error: Id already exists!";
+					IdBorderBrush = "Red";
+					Toast_OnAddError("Id already exists!");
+				}
 			}
+
 			else if (!onAddReturn)
 			{
 				IDErrorTextBlock = string.Empty;
