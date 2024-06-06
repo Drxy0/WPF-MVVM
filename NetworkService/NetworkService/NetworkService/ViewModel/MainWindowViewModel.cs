@@ -237,6 +237,27 @@ namespace NetworkService.ViewModel
 
 			Entities = new ObservableCollection<Entity>();
 
+			Entities.Add(new Entity
+			{
+				Id = 1,
+				Name = "Jedan",
+				Type = new EntityType(Model.Type.RTD),
+			});
+
+			Entities.Add(new Entity
+			{
+				Id = 2,
+				Name = "Dva",
+				Type = new EntityType(Model.Type.RTD),
+			});
+
+			Entities.Add(new Entity
+			{
+				Id = 5,
+				Name = "Pet",
+				Type = new EntityType(Model.Type.TermoSprega),
+			});
+
 			entitiesViewModel = new EntitiesViewModel();
             displayViewModel = new DisplayViewModel();
             graphViewModel = new GraphViewModel();
