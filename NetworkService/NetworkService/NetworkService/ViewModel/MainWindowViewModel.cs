@@ -32,7 +32,7 @@ namespace NetworkService.ViewModel
 		//           zavisno od broja entiteta u listi
 
 
-
+		#region Fields
 		private bool idFound = false;
 		private static int abs_id = -1;
 		private int previousCanvasIndex_PutCommand = -1;
@@ -41,7 +41,66 @@ namespace NetworkService.ViewModel
 		private string displayIcon;
 		private string graphIcon;
 		private string terminalIcon;
+		#endregion
+		#region Properties
+		private object _selectedContent;
+		public object SelectedContent
+		{
+			get => _selectedContent;
+			set
+			{
+				SetProperty(ref _selectedContent, value);
+				UndoCommand.RaiseCanExecuteChanged();
+			}
+		}
 
+		public static SaveState<CommandType, object> Undo { get; set; }
+		public static SaveState<CommandType, object> PreviousView { get; set; }
+		public string EntitiesIcon
+		{
+			get { return entitiesIcon; }
+			set { entitiesIcon = value; OnPropertyChanged(nameof(EntitiesIcon)); }
+		}
+		public string DisplayIcon
+		{
+			get { return displayIcon; }
+			set { displayIcon = value; OnPropertyChanged(nameof(DisplayIcon)); }
+		}
+		public string GraphIcon
+		{
+			get { return graphIcon; }
+			set { graphIcon = value; OnPropertyChanged(nameof(GraphIcon)); }
+		}
+		public string TerminalIcon
+		{
+			get { return terminalIcon; }
+			set { terminalIcon = value; OnPropertyChanged(nameof(TerminalIcon)); }
+		}
+		private string terminalInput;
+		public string TerminalInput
+		{
+			get { return terminalInput; }
+			set
+			{
+				terminalInput = value;
+				OnPropertyChanged(nameof(TerminalInput));
+			}
+		}
+		private string terminalDisplay;
+		public string TerminalDisplay
+		{
+			get { return terminalDisplay; }
+			set { terminalDisplay = value; OnPropertyChanged(nameof(TerminalDisplay)); }
+		}
+
+		private string terminalLabel;
+		public string TerminalLabel
+		{
+			get { return terminalLabel; }
+			set { terminalLabel = value; OnPropertyChanged(nameof(TerminalLabel)); }
+
+		}
+		#endregion
 		#region Teminal properties
 		private string terminalDisplayVisible;
 		private string terminalInputVisible;
@@ -122,56 +181,23 @@ namespace NetworkService.ViewModel
 			}
 		}
 		#endregion
-		public MyICommand<string> NavCommand { get; private set; }
-        public MyICommand<Window> CloseWindowCommand { get; private set; }
-		public MyICommand UndoCommand { get; set; }
-		public MyICommand PreviousViewCommand { get; set; }
 
 		public static ObservableCollection<Entity> Entities { get; set; } = new ObservableCollection<Entity>();
 		public static ObservableCollection<Entity> RTD_Entities { get; set; } = new ObservableCollection<Entity>();
 		public static ObservableCollection<Entity> TermoSprega_Entities { get; set; } = new ObservableCollection<Entity>();
 		public static Dictionary<int, int> idIndex_Pair { get; set; } = new Dictionary<int, int>();
-        public EntitiesViewModel entitiesViewModel;
+		public static Mutex Mutex { get; set; } = new Mutex();
+        
+		public EntitiesViewModel entitiesViewModel;
         public DisplayViewModel displayViewModel;
         public GraphViewModel graphViewModel;
         private BindableBase currentViewModel;
 		private NotificationManager notificationManager;
-
-		private object _selectedContent;
-		public object SelectedContent
-		{
-			get => _selectedContent;
-			set
-			{
-				SetProperty(ref _selectedContent, value);
-				UndoCommand.RaiseCanExecuteChanged();
-			}
-		}
-
-		public static SaveState<CommandType, object> Undo { get; set; }
-		public static SaveState<CommandType, object> PreviousView { get; set; }
-		public string EntitiesIcon
-		{
-			get { return entitiesIcon; }
-			set { entitiesIcon = value; OnPropertyChanged(nameof(EntitiesIcon)); }
-		}
-		public string DisplayIcon
-		{
-			get { return displayIcon; }
-			set { displayIcon = value; OnPropertyChanged(nameof(DisplayIcon)); }
-		}
-		public string GraphIcon
-		{
-			get { return graphIcon; }
-			set { graphIcon = value; OnPropertyChanged(nameof(GraphIcon)); }
-		}
-		public string TerminalIcon
-		{
-			get { return terminalIcon; }
-			set { terminalIcon = value; OnPropertyChanged(nameof(TerminalIcon)); }
-		}
-
 		#region Commands
+		public MyICommand<string> NavCommand { get; private set; }
+		public MyICommand<Window> CloseWindowCommand { get; private set; }
+		public MyICommand UndoCommand { get; set; }
+		public MyICommand PreviousViewCommand { get; set; }
 		public ICommand KeyPressedCommand { get; }
 		public ICommand ShiftBacktickCommand { get; }
 		public ICommand Shift1_Command { get; }
@@ -179,34 +205,13 @@ namespace NetworkService.ViewModel
 		public ICommand Shift3_Command { get; }
 		public ICommand ShiftUp_Command {  get; }
 		public ICommand ShiftDown_Command {  get; }
+		public ICommand CtrlZ_Command {  get; }
+		public ICommand CtrlX_Command {  get; }
+
 		public ICommand TerminalCommand { get; private set; }
 		#endregion
 
-		private string terminalInput;
-		public string TerminalInput
-		{
-			get { return terminalInput; }
-			set 
-			{ 
-				terminalInput = value; 
-				OnPropertyChanged(nameof(TerminalInput));
-			}
-		}
-		private string terminalDisplay;
-		public string TerminalDisplay
-		{
-			get { return terminalDisplay; }
-			set { terminalDisplay = value; OnPropertyChanged(nameof(TerminalDisplay)); }
-		}
 
-		private string terminalLabel;
-		public string TerminalLabel
-		{
-			get { return terminalLabel; }
-			set { terminalLabel = value; OnPropertyChanged(nameof(TerminalLabel)); }
-
-		}
-		public static Mutex Mutex { get; set; } = new Mutex();
 		public MainWindowViewModel()
         {
             createListener(); //Povezivanje sa serverskom aplikacijom
@@ -221,6 +226,8 @@ namespace NetworkService.ViewModel
 			Shift1_Command = new RelayCommand(OnShift1);
 			Shift2_Command = new RelayCommand(OnShift2);
 			Shift3_Command = new RelayCommand(OnShift3);
+			CtrlZ_Command = new RelayCommand(OnCtrlZ);
+			CtrlX_Command = new RelayCommand(OnCtrlX);
 
 			ShiftUp_Command = new RelayCommand(OnShiftUp);
 			ShiftDown_Command = new RelayCommand(OnShiftDown);
@@ -240,17 +247,6 @@ namespace NetworkService.ViewModel
 			ShowHide_Terminal();
 		}
 
-		private void InitialiseFields()
-		{
-			TerminalInput = string.Empty;
-			TerminalDisplay = string.Empty;
-			TerminalLabel = "Terminal input: ";
-			EntitiesIcon = "Assets/entities_white.png";
-			DisplayIcon = "Assets/display.png";
-			GraphIcon = "Assets/graph.png";
-			TerminalIcon = "Assets/terminal.png";
-			TerminalDisplayHeight = 200;
-		}
 
 		private void OnPreviousView()
 		{
@@ -279,7 +275,14 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
-
+		private void OnCtrlZ(object parameter)
+		{
+			OnUndo();
+		}
+		private void OnCtrlX(object parameter)
+		{
+			OnPreviousView();
+		}
 
 		#region Terminal
 		private void OnShiftUp(object e)
@@ -726,8 +729,6 @@ namespace NetworkService.ViewModel
 		}
 		#endregion
 
-
-
 		private void createListener()
         {
             var tcp = new TcpListener(IPAddress.Any, 25675);
@@ -910,6 +911,18 @@ namespace NetworkService.ViewModel
 		}
 		#endregion
 
+		#region Update UO
+		private void InitialiseFields()
+		{
+			TerminalInput = string.Empty;
+			TerminalDisplay = string.Empty;
+			TerminalLabel = "Terminal input: ";
+			EntitiesIcon = "Assets/entities_white.png";
+			DisplayIcon = "Assets/display.png";
+			GraphIcon = "Assets/graph.png";
+			TerminalIcon = "Assets/terminal.png";
+			TerminalDisplayHeight = 200;
+		}
 		private void OnNav(string destination)
 		{
 			switch (destination)
@@ -941,7 +954,6 @@ namespace NetworkService.ViewModel
 		{
 			MainWindow.Close();
 		}
-
 		public void UpdateCanvasValue(int id)
 		{
 			foreach (string entityIndex in DisplayViewModel.CanvasIDCollection)
@@ -964,6 +976,7 @@ namespace NetworkService.ViewModel
 				}
 			}
 		}
+		#endregion
 
 	}
 

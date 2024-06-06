@@ -50,6 +50,12 @@
         <KeyBinding Command="{Binding ShiftDown_Command}"
                     Key="OemPipe"
                     Modifiers="Shift" />
+        <KeyBinding Command="{Binding CtrlZ_Command}"
+                    Key="Z"
+                    Modifiers="Ctrl" />
+        <KeyBinding Command="{Binding CtrlX_Command}"
+                    Key="X"
+                    Modifiers="Ctrl" />
     </Window.InputBindings>
 
     <Grid>

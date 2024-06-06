@@ -13,10 +13,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{6AE2C93C-D3CE-4614-9394-158338AD45C1}|NetworkService\\NetworkService.csproj|C:\\Users\\drljo\\Desktop\\WPF-MVVM\\NetworkService\\NetworkService\\networkservice\\views\\entitiesview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{6AE2C93C-D3CE-4614-9394-158338AD45C1}|NetworkService\\NetworkService.csproj|solutionrelative:networkservice\\views\\entitiesview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6AE2C93C-D3CE-4614-9394-158338AD45C1}|NetworkService\\NetworkService.csproj|C:\\Users\\drljo\\Desktop\\WPF-MVVM\\NetworkService\\NetworkService\\networkservice\\views\\graphview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{6AE2C93C-D3CE-4614-9394-158338AD45C1}|NetworkService\\NetworkService.csproj|solutionrelative:networkservice\\views\\graphview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -40,21 +36,10 @@
               "RelativeDocumentMoniker": "NetworkService\\ViewModel\\MainWindowViewModel.cs",
               "ToolTip": "C:\\Users\\drljo\\Desktop\\WPF-MVVM\\NetworkService\\NetworkService\\NetworkService\\ViewModel\\MainWindowViewModel.cs",
               "RelativeToolTip": "NetworkService\\ViewModel\\MainWindowViewModel.cs",
-              "ViewState": "AQIAAPoCAAAAAAAAAAAuwA0DAAA2AAAA",
+              "ViewState": "AQIAABcAAAAAAAAAAAAqwMMAAAACAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-06T10:29:12.994Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "GraphView.xaml",
-              "DocumentMoniker": "C:\\Users\\drljo\\Desktop\\WPF-MVVM\\NetworkService\\NetworkService\\NetworkService\\Views\\GraphView.xaml",
-              "RelativeDocumentMoniker": "NetworkService\\Views\\GraphView.xaml",
-              "ToolTip": "C:\\Users\\drljo\\Desktop\\WPF-MVVM\\NetworkService\\NetworkService\\NetworkService\\Views\\GraphView.xaml",
-              "RelativeToolTip": "NetworkService\\Views\\GraphView.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-06-06T10:25:37.804Z"
             },
             {
               "$type": "Document",
@@ -65,7 +50,8 @@
               "ToolTip": "C:\\Users\\drljo\\Desktop\\WPF-MVVM\\NetworkService\\NetworkService\\NetworkService\\MainWindow.xaml",
               "RelativeToolTip": "NetworkService\\MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-06-06T10:23:00.037Z"
+              "WhenOpened": "2024-06-06T10:23:00.037Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -76,7 +62,8 @@
               "ToolTip": "C:\\Users\\drljo\\Desktop\\WPF-MVVM\\NetworkService\\NetworkService\\NetworkService\\Views\\EntitiesView.xaml",
               "RelativeToolTip": "NetworkService\\Views\\EntitiesView.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-06-06T10:22:55.306Z"
+              "WhenOpened": "2024-06-06T10:22:55.306Z",
+              "EditorCaption": ""
             }
           ]
         }
